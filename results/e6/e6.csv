@@ -1,0 +1,5 @@
+system,variant,reps,victims,write failover s,first writer after,errors during the failure,req/s during,req/s before,errors after restart,req/s after
+etcd,leader,3,n2 n3,1.110 (0.872 to 1.262),n1 n2,24 (21 to 32),8804 (8648 to 8834),8076 (8049 to 8223),0,8527 (8376 to 8584)
+etcd,follower,3,n1,0.002 (0.001 to 0.004),n3,20,9056 (8731 to 9454),8526 (8362 to 8571),0,8143 (8073 to 8436)
+redis,leader,3,n1,60.666 (60.632 to 60.878),n1,38097 (38045 to 38198),3483 (2563 to 10620),298950 (284013 to 300615),12 (11 to 68),321846 (320472 to 337562)
+redis,follower,3,n2,0.000 (0.000 to 0.000),n1,38,285170 (279701 to 288340),311311 (309187 to 312568),8 (8 to 9),311285 (310377 to 312912)

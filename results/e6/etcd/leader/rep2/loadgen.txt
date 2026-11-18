@@ -1,0 +1,11 @@
+system=etcd read=linearizable threads=16 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 8490.0 req/s   errors 32 (21 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1018342     6788.9       23     1.386     4.928     9.471    26.054  1285.860
+PUT      255153     1701.0        9     1.341     4.539     8.900    25.295  1285.315
+all     1273495     8490.0       32     1.375     4.878     9.367    25.814  1285.860
+generator CPU: 0.42 of 10 CPUs (4%)
+errors in the whole run:
+       21  context deadline exceeded
+        8  etcdserver: leader changed
+        3  rpc error: code = Unavailable desc = error reading from server: EOF

@@ -1,0 +1,5 @@
+keys 10000, nodes n1 n2 n3
+divergent keys: 0
+n1: lost writes 0, unknown values 0, in flight at the end 6, missing keys 0, read errors 0
+n2: lost writes 0, unknown values 0, in flight at the end 6, missing keys 0, read errors 0
+n3: lost writes 0, unknown values 0, in flight at the end 6, missing keys 0, read errors 0

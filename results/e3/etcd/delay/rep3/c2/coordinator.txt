@@ -1,0 +1,4 @@
+system=etcd read=linearizable write=n1 read-node=n3 pairs=500 in 200.2s
+PUT ok 500 failed 0   GET ok 500 failed 0   missing 0
+stale reads: 0 of 500 (0.000%), max lag 0 confirmed writes
+PUT p50 201.796 ms p99 210.246 ms   GET p50 199.064 ms p99 200.367 ms

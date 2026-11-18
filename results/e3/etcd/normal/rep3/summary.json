@@ -1,0 +1,38 @@
+{
+  "system": "etcd",
+  "read": "linearizable",
+  "write_node": "n1",
+  "read_node": "n3",
+  "key": "stale",
+  "pairs": 10000,
+  "start_unix_ns": 1795023313448329564,
+  "duration_s": 12.329729305,
+  "put_ok": 10000,
+  "put_failed": 0,
+  "get_ok": 10000,
+  "get_failed": 0,
+  "stale": 0,
+  "stale_rate": 0,
+  "max_lag": 0,
+  "missing": 0,
+  "put_latency_ms": {
+    "min": 0.428602,
+    "mean": 1.0113830979,
+    "p50": 0.7075,
+    "p90": 1.094379,
+    "p95": 1.612475,
+    "p99": 7.106557,
+    "p99.9": 23.280131,
+    "max": 41.186117
+  },
+  "get_latency_ms": {
+    "min": 0.109583,
+    "mean": 0.2205156734,
+    "p50": 0.15856,
+    "p90": 0.248649,
+    "p95": 0.399845,
+    "p99": 0.985148,
+    "p99.9": 7.098447,
+    "max": 26.840132
+  }
+}

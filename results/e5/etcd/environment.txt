@@ -1,0 +1,54 @@
+date:      2026-11-18T15:11:46-03:00
+kernel:    Linux 7.2.15-arch1-1 x86_64
+os:        Arch Linux
+
+CPU(s):                                  16
+Model name:                              13th Gen Intel(R) Core(TM) i7-13620H
+Thread(s) per core:                      2
+Core(s) per socket:                      10
+Socket(s):                               1
+CPU(s) scaling MHz:                      34%
+CPU max MHz:                             4900.0000
+governor:  powersave
+epp:       performance
+ac online: 1 (ACAD)
+
+               total        used        free      shared  buff/cache   available
+Mem:            31Gi       5.8Gi        17Gi       714Mi       8.7Gi        25Gi
+Swap:          4.0Gi          0B       4.0Gi
+
+docker data: /var/lib/docker
+/dev/nvme0n1p2 ext4  468G  106G  338G  24% /
+NAME    MODEL           ROTA TRAN   SIZE
+nvme0n1 HFS512GEJ9X110N    0 nvme 476.9G
+
+docker engine 29.9.3
+Docker Compose version 5.7.0
+storage driver overlayfs, cgroup v2 (systemd)
+
+images:
+  quay.io/coreos/etcd:v3.5.14 sha256:42106a001d1be7fd22e48830071ceae0fe760ff2c5df8c76c0e3b586d8a1f0fc
+  redis:7.4.11 sha256:44960b3100c48159a66d28c18b0588c193492e25f7551d60e51dd464fc3eca5b
+  nicolaka/netshoot sha256:b09d9b21381f47a79b3cbcb30da25266dc17186ea00ae65e99fdc51396f48e70
+  lab-gerador sha256:e7629cccd5b559373f618e204d77bc61ffbbb2c05ab0e2da719ce01c383677d7
+
+client libraries (go.mod):
+  github.com/redis/go-redis/v9 v9.23.0
+  go.etcd.io/etcd/client/v3 v3.5.35
+  google.golang.org/grpc v1.83.2
+
+lab/.env:
+  LAB_NET_CLUSTER=172.30.0
+  LAB_NET_CLIENTS=172.31.0
+  ETCD_IMAGE=quay.io/coreos/etcd:v3.5.14
+  REDIS_IMAGE=redis:7.4.11
+  NETSHOOT_IMAGE=nicolaka/netshoot
+  LAB_CPUS_N1=0,1
+  LAB_CPUS_N2=2,3
+  LAB_CPUS_N3=8,9
+  LAB_CPUS_GEN=4-7,10-15
+  LAB_UID=1000
+  LAB_GID=1000
+
+other running containers:
+  none

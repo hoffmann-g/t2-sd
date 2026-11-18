@@ -1,0 +1,4 @@
+system=redis read=any node write=n1 read-node=n3 pairs=500 in 0.0s
+PUT ok 500 failed 0   GET ok 500 failed 0   missing 0
+stale reads: 6 of 500 (1.200%), max lag 1 confirmed writes
+PUT p50 0.033 ms p99 0.118 ms   GET p50 0.022 ms p99 0.108 ms

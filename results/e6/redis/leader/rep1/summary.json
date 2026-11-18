@@ -1,0 +1,160 @@
+{
+  "system": "redis",
+  "addrs": [
+    "172.31.0.11",
+    "172.31.0.12",
+    "172.31.0.13"
+  ],
+  "read": "replicas",
+  "start": "2026-11-18T19:17:23.493660751Z",
+  "start_unix_ns": 1795029443493660751,
+  "threads": 8,
+  "duration_s": 180,
+  "warmup_s": 30,
+  "window_s": 150,
+  "keys": 10000,
+  "value_bytes": 256,
+  "put_ratio": 0.2,
+  "timeout_ms": 2000,
+  "seed": 1,
+  "routing": "rotation",
+  "throughput": 196006.88666666666,
+  "all": {
+    "ok": 29401033,
+    "timeouts": 39,
+    "failed": 38026,
+    "throughput": 196006.88666666666,
+    "latency_ms": {
+      "min": 0.007293,
+      "mean": 0.023654493584119987,
+      "p50": 0.022348,
+      "p90": 0.032295,
+      "p95": 0.035975,
+      "p99": 0.045125,
+      "p99.9": 0.120472,
+      "max": 5.882695
+    }
+  },
+  "get": {
+    "ok": 23552472,
+    "timeouts": 0,
+    "failed": 12,
+    "throughput": 157016.48,
+    "latency_ms": {
+      "min": 0.007293,
+      "mean": 0.022425498714147715,
+      "p50": 0.02136,
+      "p90": 0.02995,
+      "p95": 0.032972,
+      "p99": 0.040567,
+      "p99.9": 0.116916,
+      "max": 5.882695
+    }
+  },
+  "put": {
+    "ok": 5848561,
+    "timeouts": 39,
+    "failed": 38014,
+    "throughput": 38990.40666666667,
+    "latency_ms": {
+      "min": 0.008437,
+      "mean": 0.028603722507810042,
+      "p50": 0.027429,
+      "p90": 0.038384,
+      "p95": 0.042184,
+      "p99": 0.051227,
+      "p99.9": 0.134764,
+      "max": 4.438487
+    }
+  },
+  "nodes": [
+    {
+      "node": "n1",
+      "get": {
+        "ok": 0,
+        "timeouts": 0,
+        "failed": 0,
+        "throughput": 0
+      },
+      "put": {
+        "ok": 5848561,
+        "timeouts": 39,
+        "failed": 38014,
+        "throughput": 38990.40666666667,
+        "latency_ms": {
+          "min": 0.008437,
+          "mean": 0.028603722507810042,
+          "p50": 0.027429,
+          "p90": 0.038384,
+          "p95": 0.042184,
+          "p99": 0.051227,
+          "p99.9": 0.134764,
+          "max": 4.438487
+        }
+      }
+    },
+    {
+      "node": "n2",
+      "get": {
+        "ok": 11656902,
+        "timeouts": 0,
+        "failed": 8,
+        "throughput": 77712.68,
+        "latency_ms": {
+          "min": 0.007293,
+          "mean": 0.02243553894877044,
+          "p50": 0.021375,
+          "p90": 0.029923,
+          "p95": 0.032917,
+          "p99": 0.04051,
+          "p99.9": 0.12472,
+          "max": 3.291036
+        }
+      },
+      "put": {
+        "ok": 0,
+        "timeouts": 0,
+        "failed": 0,
+        "throughput": 0
+      }
+    },
+    {
+      "node": "n3",
+      "get": {
+        "ok": 11895570,
+        "timeouts": 0,
+        "failed": 4,
+        "throughput": 79303.8,
+        "latency_ms": {
+          "min": 0.007818,
+          "mean": 0.022415659922811602,
+          "p50": 0.021346,
+          "p90": 0.029977,
+          "p95": 0.033025,
+          "p99": 0.040622,
+          "p99.9": 0.10834,
+          "max": 5.882695
+        }
+      },
+      "put": {
+        "ok": 0,
+        "timeouts": 0,
+        "failed": 0,
+        "throughput": 0
+      }
+    }
+  ],
+  "errors": {
+    "EOF": 8,
+    "LOADING Redis is loading the dataset in memory": 12,
+    "context deadline exceeded": 39,
+    "dial tcp 172.31.0.11:6379: connect: no route to host": 8943,
+    "dial tcp 172.31.0.11:6379: i/o timeout": 29063
+  },
+  "generator": {
+    "cpus": 10,
+    "cpu_seconds": 470.15004,
+    "cores": 3.1343335999999997,
+    "utilization": 0.31343336
+  }
+}

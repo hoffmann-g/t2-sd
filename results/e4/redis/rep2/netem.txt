@@ -1,0 +1,3 @@
+b4cda978b021: netem 50ms on eth0
+b8d65c91be31: netem 50ms on eth1
+51a7d64afd36: netem 50ms on eth1

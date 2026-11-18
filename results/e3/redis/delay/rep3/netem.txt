@@ -1,0 +1,3 @@
+7814659d361a: netem 50ms on eth1
+2fb12b700b96: netem 50ms on eth1
+6a9fef462a79: netem 50ms on eth1

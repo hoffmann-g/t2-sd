@@ -1,0 +1,13 @@
+system=redis read=replicas threads=8 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 196006.9 req/s   errors 38065 (39 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    23552472   157016.5       12     0.021     0.033     0.041     0.117     5.883
+PUT     5848561    38990.4    38053     0.027     0.042     0.051     0.135     4.438
+all    29401033   196006.9    38065     0.022     0.036     0.045     0.120     5.883
+generator CPU: 3.13 of 10 CPUs (31%)
+errors in the whole run:
+    29063  dial tcp 172.31.0.11:6379: i/o timeout
+     8943  dial tcp 172.31.0.11:6379: connect: no route to host
+       39  context deadline exceeded
+       12  LOADING Redis is loading the dataset in memory
+        8  EOF

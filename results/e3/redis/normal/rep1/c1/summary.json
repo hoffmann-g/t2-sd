@@ -1,0 +1,38 @@
+{
+  "system": "redis",
+  "read": "any node",
+  "write_node": "n1",
+  "read_node": "n3",
+  "key": "stale1",
+  "pairs": 500,
+  "start_unix_ns": 1795027954333247509,
+  "duration_s": 0.05769308,
+  "put_ok": 500,
+  "put_failed": 0,
+  "get_ok": 500,
+  "get_failed": 0,
+  "stale": 53,
+  "stale_rate": 0.106,
+  "max_lag": 1,
+  "missing": 0,
+  "put_latency_ms": {
+    "min": 0.017571,
+    "mean": 0.07308595,
+    "p50": 0.039384,
+    "p90": 0.092042,
+    "p95": 0.123436,
+    "p99": 0.544237,
+    "p99.9": 7.499959,
+    "max": 7.499959
+  },
+  "get_latency_ms": {
+    "min": 0.012588,
+    "mean": 0.041500958,
+    "p50": 0.029729,
+    "p90": 0.060716,
+    "p95": 0.110714,
+    "p99": 0.234674,
+    "p99.9": 0.687493,
+    "max": 0.687493
+  }
+}

@@ -1,0 +1,5 @@
+system,condition,read,nodes,reps,pairs,stale rate,stale / GETs,max lag,PUT errors,GET errors,PUT p50 ms,PUT p99 ms,GET p50 ms,GET p99 ms
+etcd,normal,linearizable,"PUT n1, GET n3",3,10000,0.00%,0 / 30000,0,0,0,0.708 (0.701 to 0.718),1.995 (1.540 to 7.107),0.157 (0.128 to 0.159),0.833 (0.582 to 0.985)
+etcd,delay,linearizable,"PUT n1, GET n3",3,10000,0.00%,0 / 30000,0,0,0,101.987 (100.875 to 202.041),115.805 (101.954 to 217.907),298.981 (198.821 to 300.121),304.595 (200.246 to 308.512)
+redis,normal,any node,"PUT n1, GET n3",3,10000,2.60% (1.72% to 10.63%),1495 / 30000,1,0,0,0.039 (0.022 to 0.047),0.175 (0.064 to 1.722),0.027 (0.015 to 0.038),0.154 (0.052 to 0.641)
+redis,delay,any node,"PUT n1, GET n3",3,10000,100.00%,30000 / 30000,500,0,0,0.031 (0.021 to 0.043),0.225 (0.105 to 2.545),0.030 (0.022 to 0.045),0.206 (0.110 to 2.878)

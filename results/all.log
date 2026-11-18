@@ -1,0 +1,1497 @@
+[11:35:49] series started (repetitions: 3)
+[11:35:50] E1 etcd rep 1 N=1: starting clean cluster
+[11:35:54] E1 etcd rep 1 N=1: load for 120s
+system=etcd read=linearizable threads=1 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 3310.4 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      238156     2646.2        0     0.138     0.208     0.597     2.983    52.023
+PUT       59781      664.2        0     0.696     1.183     6.168    14.682    57.440
+all      297937     3310.4        0     0.146     0.752     1.256     7.242    57.440
+generator CPU: 0.25 of 10 CPUs (3%)
+[11:37:55] E1 etcd rep 1 N=2: starting clean cluster
+[11:38:09] E1 etcd rep 1 N=2: load for 120s
+system=etcd read=linearizable threads=2 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 4256.4 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      306462     3405.1        0     0.172     0.769     1.460     7.710    35.825
+PUT       76617      851.3        0     0.739     1.603     6.882    16.302    47.869
+all      383079     4256.4        0     0.194     1.099     4.973    12.507    47.869
+generator CPU: 0.32 of 10 CPUs (3%)
+[11:40:11] E1 etcd rep 1 N=4: starting clean cluster
+[11:40:25] E1 etcd rep 1 N=4: load for 120s
+system=etcd read=linearizable threads=4 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 5379.1 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      387699     4307.8        0     0.362     1.449     6.255    14.397    54.324
+PUT       96420     1071.3        0     0.941     2.077     7.411    17.425    52.728
+all      484119     5379.1        0     0.611     1.611     6.575    15.489    54.324
+generator CPU: 0.37 of 10 CPUs (4%)
+[11:42:27] E1 etcd rep 1 N=8: starting clean cluster
+[11:42:41] E1 etcd rep 1 N=8: load for 120s
+system=etcd read=linearizable threads=8 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 6555.9 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      472085     5245.4        0     0.826     2.624     7.731    17.929    72.355
+PUT      117942     1310.5        0     1.136     2.965     8.156    20.342    63.352
+all      590027     6555.9        0     0.911     2.673     7.838    18.318    72.355
+generator CPU: 0.39 of 10 CPUs (4%)
+[11:44:42] E1 etcd rep 1 N=16: starting clean cluster
+[11:44:57] E1 etcd rep 1 N=16: load for 120s
+system=etcd read=linearizable threads=16 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 8299.8 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      597274     6636.4        0     1.443     5.420    10.003    28.327    71.596
+PUT      149705     1663.4        0     1.429     5.680     9.219    26.379    70.606
+all      746979     8299.8        0     1.439     5.451     9.863    27.570    71.596
+generator CPU: 0.42 of 10 CPUs (4%)
+[11:46:59] E1 etcd rep 1 N=32: starting clean cluster
+[11:47:14] E1 etcd rep 1 N=32: load for 120s
+system=etcd read=linearizable threads=32 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 10670.9 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      767898     8532.2        0     2.372     8.309    16.874    39.677    83.982
+PUT      192481     2138.7        0     1.884     7.390    15.107    36.783    81.242
+all      960379    10670.9        0     2.256     8.114    16.626    39.080    83.982
+generator CPU: 0.55 of 10 CPUs (5%)
+[11:49:17] E1 etcd rep 1 N=64: starting clean cluster
+[11:49:32] E1 etcd rep 1 N=64: load for 120s
+system=etcd read=linearizable threads=64 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 16121.1 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1159876    12887.5        0     3.315     9.660    19.148    55.291   128.402
+PUT      291026     3233.6        0     2.388     8.042    15.343    42.506   102.572
+all     1450902    16121.1        0     3.090     9.289    18.317    52.748   128.402
+generator CPU: 0.77 of 10 CPUs (8%)
+[11:51:34] E1 etcd rep 1 N=128: starting clean cluster
+[11:51:49] E1 etcd rep 1 N=128: load for 120s
+system=etcd read=linearizable threads=128 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 21543.1 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1550707    17230.1        0     4.894    15.284    31.284    85.297   165.663
+PUT      388172     4313.0        0     3.330     9.965    22.984    72.650   141.393
+all     1938879    21543.1        0     4.523    14.501    30.103    81.709   165.663
+generator CPU: 0.97 of 10 CPUs (10%)
+[11:53:51] E1 etcd rep 1 N=256: starting clean cluster
+[11:54:05] E1 etcd rep 1 N=256: load for 120s
+system=etcd read=linearizable threads=256 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 29139.8 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     2098216    23313.5        0     7.192    20.644    57.336   141.392   282.717
+PUT      524369     5826.3        0     4.689    15.133    40.870   110.164   199.620
+all     2622585    29139.8        0     6.628    19.364    54.649   137.299   282.717
+generator CPU: 1.33 of 10 CPUs (13%)
+[11:56:08] E1 etcd rep 1 N=512: starting clean cluster
+[11:56:22] E1 etcd rep 1 N=512: load for 120s
+system=etcd read=linearizable threads=512 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 45587.6 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     3281307    36459.0        0     9.462    25.102    62.507   180.243   319.024
+PUT      821581     9128.7        0     6.135    17.452    43.239   131.241   189.799
+all     4102888    45587.6        0     8.696    23.737    59.243   173.736   319.024
+generator CPU: 1.92 of 10 CPUs (19%)
+[11:58:25] E1 etcd rep 2 N=1: starting clean cluster
+[11:58:40] E1 etcd rep 2 N=1: load for 120s
+system=etcd read=linearizable threads=1 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 3276.9 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      235746     2619.4        0     0.138     0.209     0.594     3.044    37.512
+PUT       59178      657.5        0     0.701     1.189     6.219    15.371    49.208
+all      294924     3276.9        0     0.147     0.753     1.248     7.348    49.208
+generator CPU: 0.25 of 10 CPUs (3%)
+[12:00:41] E1 etcd rep 2 N=2: starting clean cluster
+[12:00:55] E1 etcd rep 2 N=2: load for 120s
+system=etcd read=linearizable threads=2 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 4242.0 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      305453     3393.9        0     0.172     0.769     1.497     7.770    51.765
+PUT       76326      848.1        0     0.736     1.618     6.955    16.333    51.560
+all      381779     4242.0        0     0.193     1.095     5.178    12.275    51.765
+generator CPU: 0.31 of 10 CPUs (3%)
+[12:02:57] E1 etcd rep 2 N=4: starting clean cluster
+[12:03:11] E1 etcd rep 2 N=4: load for 120s
+system=etcd read=linearizable threads=4 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 5370.3 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      387062     4300.7        0     0.366     1.444     6.258    13.934    51.229
+PUT       96266     1069.6        0     0.939     2.071     7.461    17.594    51.213
+all      483328     5370.3        0     0.613     1.604     6.630    15.478    51.229
+generator CPU: 0.37 of 10 CPUs (4%)
+[12:05:13] E1 etcd rep 2 N=8: starting clean cluster
+[12:05:28] E1 etcd rep 2 N=8: load for 120s
+system=etcd read=linearizable threads=8 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 6505.1 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      468479     5205.3        0     0.825     2.634     7.843    18.282    61.564
+PUT      116976     1299.7        0     1.141     3.072     8.224    19.910    60.622
+all      585455     6505.1        0     0.915     2.682     7.936    18.440    61.564
+generator CPU: 0.39 of 10 CPUs (4%)
+[12:07:29] E1 etcd rep 2 N=16: starting clean cluster
+[12:07:43] E1 etcd rep 2 N=16: load for 120s
+system=etcd read=linearizable threads=16 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 8316.4 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      598510     6650.1        0     1.443     5.437     9.831    26.655    72.340
+PUT      149966     1666.3        0     1.434     6.020     9.381    25.580    71.312
+all      748476     8316.4        0     1.441     5.534     9.765    26.543    72.340
+generator CPU: 0.42 of 10 CPUs (4%)
+[12:09:46] E1 etcd rep 2 N=32: starting clean cluster
+[12:10:00] E1 etcd rep 2 N=32: load for 120s
+system=etcd read=linearizable threads=32 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 11021.6 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      793089     8812.1        0     2.329     8.323    15.439    35.641    90.035
+PUT      198858     2209.5        0     1.840     7.477    13.650    31.107    66.559
+all      991947    11021.6        0     2.208     8.127    15.145    34.928    90.035
+generator CPU: 0.57 of 10 CPUs (6%)
+[12:12:04] E1 etcd rep 2 N=64: starting clean cluster
+[12:12:18] E1 etcd rep 2 N=64: load for 120s
+system=etcd read=linearizable threads=64 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 15493.5 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1114697    12385.5        0     3.400     9.874    21.530    55.213   106.842
+PUT      279721     3108.0        0     2.459     8.105    17.034    48.475    85.993
+all     1394418    15493.5        0     3.176     9.482    21.012    54.340   106.842
+generator CPU: 0.74 of 10 CPUs (7%)
+[12:14:21] E1 etcd rep 2 N=128: starting clean cluster
+[12:14:36] E1 etcd rep 2 N=128: load for 120s
+system=etcd read=linearizable threads=128 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 21108.5 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1519434    16882.6        0     5.103    14.329    36.371    82.598   147.942
+PUT      380335     4225.9        0     3.505     9.503    27.656    70.275   142.691
+all     1899769    21108.5        0     4.721    13.288    34.711    80.658   147.942
+generator CPU: 0.97 of 10 CPUs (10%)
+[12:16:38] E1 etcd rep 2 N=256: starting clean cluster
+[12:16:52] E1 etcd rep 2 N=256: load for 120s
+system=etcd read=linearizable threads=256 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 31100.5 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     2239242    24880.5        0     6.816    18.970    45.832   141.991   258.094
+PUT      559800     6220.0        0     4.442    14.183    33.837   107.269   220.318
+all     2799042    31100.5        0     6.272    18.051    43.274   139.731   258.094
+generator CPU: 1.44 of 10 CPUs (14%)
+[12:18:54] E1 etcd rep 2 N=512: starting clean cluster
+[12:19:08] E1 etcd rep 2 N=512: load for 120s
+system=etcd read=linearizable threads=512 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 42686.3 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     3072542    34139.4        0     9.694    27.611    85.160   203.434   385.601
+PUT      769225     8546.9        0     6.280    18.791    57.735   143.358   223.703
+all     3841767    42686.3        0     8.923    25.836    80.003   197.149   385.601
+generator CPU: 1.81 of 10 CPUs (18%)
+[12:21:12] E1 etcd rep 3 N=1: starting clean cluster
+[12:21:27] E1 etcd rep 3 N=1: load for 120s
+system=etcd read=linearizable threads=1 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 3257.1 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      234301     2603.3        0     0.138     0.210     0.595     2.954    33.723
+PUT       58841      653.8        0     0.700     1.185     6.213    15.586    64.028
+all      293142     3257.1        0     0.147     0.755     1.249     7.282    64.028
+generator CPU: 0.25 of 10 CPUs (3%)
+[12:23:29] E1 etcd rep 3 N=2: starting clean cluster
+[12:23:43] E1 etcd rep 3 N=2: load for 120s
+system=etcd read=linearizable threads=2 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 4221.8 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      303967     3377.4        0     0.172     0.771     1.533     7.822    72.211
+PUT       75991      844.3        0     0.739     1.609     6.913    16.850    72.243
+all      379958     4221.8        0     0.193     1.106     5.417    12.535    72.243
+generator CPU: 0.32 of 10 CPUs (3%)
+[12:25:44] E1 etcd rep 3 N=4: starting clean cluster
+[12:25:58] E1 etcd rep 3 N=4: load for 120s
+system=etcd read=linearizable threads=4 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 5352.1 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      385627     4284.7        0     0.360     1.439     6.249    14.570    67.139
+PUT       96064     1067.4        0     0.964     2.083     7.491    18.305    51.286
+all      481691     5352.1        0     0.611     1.603     6.629    15.868    67.139
+generator CPU: 0.37 of 10 CPUs (4%)
+[12:28:00] E1 etcd rep 3 N=8: starting clean cluster
+[12:28:14] E1 etcd rep 3 N=8: load for 120s
+system=etcd read=linearizable threads=8 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 6582.2 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      473997     5266.6        0     0.825     2.582     7.807    18.242    89.580
+PUT      118398     1315.5        0     1.135     2.843     8.149    18.681    54.354
+all      592395     6582.2        0     0.908     2.615     7.891    18.339    89.580
+generator CPU: 0.39 of 10 CPUs (4%)
+[12:30:18] E1 etcd rep 3 N=16: starting clean cluster
+[12:30:33] E1 etcd rep 3 N=16: load for 120s
+system=etcd read=linearizable threads=16 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 8426.4 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      606422     6738.0        0     1.428     5.293     9.508    25.072    76.689
+PUT      151950     1688.3        0     1.423     5.282     8.938    22.351    74.118
+all      758372     8426.4        0     1.427     5.292     9.407    24.658    76.689
+generator CPU: 0.43 of 10 CPUs (4%)
+[12:32:35] E1 etcd rep 3 N=32: starting clean cluster
+[12:32:49] E1 etcd rep 3 N=32: load for 120s
+system=etcd read=linearizable threads=32 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 10884.7 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      783246     8702.7        0     2.356     8.138    15.879    39.030   104.583
+PUT      196380     2182.0        0     1.871     7.313    14.372    35.985   104.287
+all      979626    10884.7        0     2.238     7.943    15.602    38.187   104.583
+generator CPU: 0.54 of 10 CPUs (5%)
+[12:34:52] E1 etcd rep 3 N=64: starting clean cluster
+[12:35:05] E1 etcd rep 3 N=64: load for 120s
+system=etcd read=linearizable threads=64 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 15383.2 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1106815    12297.9        0     3.447     9.655    21.379    57.278   115.060
+PUT      277669     3085.2        0     2.504     8.006    16.877    48.334   121.047
+all     1384484    15383.2        0     3.225     9.300    20.769    56.093   121.047
+generator CPU: 0.73 of 10 CPUs (7%)
+[12:37:08] E1 etcd rep 3 N=128: starting clean cluster
+[12:37:22] E1 etcd rep 3 N=128: load for 120s
+system=etcd read=linearizable threads=128 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 21280.9 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1531859    17020.7        0     4.941    15.506    33.015    86.974   161.123
+PUT      383426     4260.3        0     3.381    10.117    24.573    70.666   148.806
+all     1915285    21280.9        0     4.577    14.759    31.289    84.429   161.123
+generator CPU: 0.97 of 10 CPUs (10%)
+[12:39:26] E1 etcd rep 3 N=256: starting clean cluster
+[12:39:40] E1 etcd rep 3 N=256: load for 120s
+system=etcd read=linearizable threads=256 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 30180.8 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     2173083    24145.4        0     6.850    21.224    54.474   133.968   236.376
+PUT      543188     6035.4        0     4.444    15.245    37.649   108.127   170.746
+all     2716271    30180.8        0     6.309    19.829    51.154   131.660   236.376
+generator CPU: 1.38 of 10 CPUs (14%)
+[12:41:43] E1 etcd rep 3 N=512: starting clean cluster
+[12:41:57] E1 etcd rep 3 N=512: load for 120s
+system=etcd read=linearizable threads=512 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 44124.8 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     3176108    35290.1        0     9.585    27.088    70.551   189.208   338.323
+PUT      795128     8834.8        0     6.281    18.732    44.496   133.393   218.651
+all     3971236    44124.8        0     8.847    25.204    64.345   178.506   338.323
+generator CPU: 1.87 of 10 CPUs (19%)
+ Container n2 Stopping 
+ Container gerador Stopping 
+ Container n3 Stopping 
+ Container n1 Stopping 
+ Container n2 Stopped 
+ Container n2 Removing 
+ Container n1 Stopped 
+ Container n1 Removing 
+ Container n2 Removed 
+ Container n1 Removed 
+ Container n3 Stopped 
+ Container n3 Removing 
+ Container n3 Removed 
+ Container gerador Stopped 
+ Container gerador Removing 
+ Container gerador Removed 
+ Network lab_cluster Removing 
+ Network lab_clientes Removing 
+ Network lab_clientes Removed 
+ Network lab_cluster Removed 
+[12:44:11] E1 etcd: done. Summary: go run ./cmd/analyze e1
+[12:44:11] E1 redis rep 1 N=1: starting clean cluster
+[12:44:19] E1 redis rep 1 N=1: load for 120s
+system=redis read=replicas threads=1 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 85869.6 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     6182072    68689.7        0     0.010     0.011     0.018     0.023     2.882
+PUT     1546195    17179.9        0     0.016     0.020     0.025     0.087     1.815
+all     7728267    85869.6        0     0.010     0.018     0.020     0.047     2.882
+generator CPU: 0.54 of 10 CPUs (5%)
+[12:46:22] E1 redis rep 1 N=2: starting clean cluster
+[12:46:41] E1 redis rep 1 N=2: load for 120s
+system=redis read=replicas threads=2 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 124297.4 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     8950528    99450.3        0     0.012     0.027     0.033     0.070     3.323
+PUT     2236235    24847.1        0     0.018     0.029     0.039     0.105     1.154
+all    11186763   124297.4        0     0.013     0.027     0.034     0.079     3.323
+generator CPU: 0.95 of 10 CPUs (10%)
+[12:48:45] E1 redis rep 1 N=4: starting clean cluster
+[12:49:05] E1 redis rep 1 N=4: load for 120s
+system=redis read=replicas threads=4 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 194758.5 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    14023339   155814.9        0     0.017     0.028     0.037     0.052     1.877
+PUT     3504927    38943.6        0     0.024     0.037     0.046     0.078     3.077
+all    17528266   194758.5        0     0.019     0.032     0.040     0.057     3.077
+generator CPU: 2.52 of 10 CPUs (25%)
+[12:51:12] E1 redis rep 1 N=8: starting clean cluster
+[12:51:30] E1 redis rep 1 N=8: load for 120s
+system=redis read=replicas threads=8 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 299516.9 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    21565787   239619.9        0     0.023     0.035     0.042     0.077     3.389
+PUT     5390731    59897.0        0     0.030     0.045     0.054     0.118     3.023
+all    26956518   299516.9        0     0.025     0.039     0.047     0.088     3.389
+generator CPU: 5.23 of 10 CPUs (52%)
+[12:53:41] E1 redis rep 1 N=16: starting clean cluster
+[12:53:59] E1 redis rep 1 N=16: load for 120s
+system=redis read=replicas threads=16 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 403146.9 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    29031029   322567.0        0     0.036     0.060     0.079     0.210     4.885
+PUT     7252191    80579.9        0     0.037     0.061     0.079     0.192     3.746
+all    36283220   403146.9        0     0.036     0.061     0.079     0.206     4.885
+generator CPU: 6.99 of 10 CPUs (70%)
+[12:56:14] E1 redis rep 1 N=32: starting clean cluster
+[12:56:33] E1 redis rep 1 N=32: load for 120s
+system=redis read=replicas threads=32 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 470526.7 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    33876971   376410.8        0     0.066     0.118     0.179     0.358     7.944
+PUT     8470433    94115.9        0     0.043     0.087     0.128     0.287     7.895
+all    42347404   470526.7        0     0.062     0.114     0.172     0.349     7.944
+generator CPU: 6.91 of 10 CPUs (69%)
+[12:58:49] E1 redis rep 1 N=64: starting clean cluster
+[12:59:08] E1 redis rep 1 N=64: load for 120s
+system=redis read=replicas threads=64 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 500668.1 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    36050488   400561.0        0     0.134     0.234     0.331     0.615     7.294
+PUT     9009641   100107.1        0     0.050     0.133     0.233     0.563     6.269
+all    45060129   500668.1        0     0.122     0.226     0.320     0.607     7.294
+generator CPU: 7.04 of 10 CPUs (70%)
+[13:01:27] E1 redis rep 1 N=128: starting clean cluster
+[13:01:46] E1 redis rep 1 N=128: load for 120s
+system=redis read=replicas threads=128 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 512368.8 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    36891514   409905.7        0     0.277     0.505     0.676     1.187     7.963
+PUT     9221677   102463.1        0     0.057     0.180     0.381     1.061     7.090
+all    46113191   512368.8        0     0.248     0.487     0.653     1.167     7.963
+generator CPU: 7.10 of 10 CPUs (71%)
+[13:04:06] E1 redis rep 1 N=256: starting clean cluster
+[13:04:25] E1 redis rep 1 N=256: load for 120s
+system=redis read=replicas threads=256 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 518141.9 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    37305402   414504.5        0     0.570     1.064     1.363     2.127     8.260
+PUT     9327373   103637.5        0     0.067     0.250     0.583     1.843    19.175
+all    46632775   518141.9        0     0.472     1.029     1.329     2.095    19.175
+generator CPU: 7.15 of 10 CPUs (72%)
+[13:06:44] E1 redis rep 1 N=512: starting clean cluster
+[13:07:04] E1 redis rep 1 N=512: load for 120s
+system=redis read=replicas threads=512 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 495734.4 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    35692860   396587.3        0     1.263     2.599     3.303     3.910    10.159
+PUT     8923235    99147.1        0     0.064     0.250     0.439     1.083     7.344
+all    44616095   495734.4        0     0.594     2.527     3.220     3.841    10.159
+generator CPU: 6.89 of 10 CPUs (69%)
+[13:09:24] E1 redis rep 2 N=1: starting clean cluster
+[13:09:43] E1 redis rep 2 N=1: load for 120s
+system=redis read=replicas threads=1 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 87649.5 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     6310150    70112.8        0     0.010     0.011     0.018     0.024     2.016
+PUT     1578301    17536.7        0     0.016     0.020     0.025     0.088     0.866
+all     7888451    87649.5        0     0.010     0.017     0.020     0.049     2.016
+generator CPU: 0.53 of 10 CPUs (5%)
+[13:11:46] E1 redis rep 2 N=2: starting clean cluster
+[13:12:05] E1 redis rep 2 N=2: load for 120s
+system=redis read=replicas threads=2 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 129824.5 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     9348047   103867.2        0     0.012     0.026     0.031     0.062     1.193
+PUT     2336161    25957.3        0     0.018     0.027     0.036     0.095     1.525
+all    11684208   129824.5        0     0.013     0.026     0.032     0.072     1.525
+generator CPU: 0.95 of 10 CPUs (10%)
+[13:14:09] E1 redis rep 2 N=4: starting clean cluster
+[13:14:28] E1 redis rep 2 N=4: load for 120s
+system=redis read=replicas threads=4 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 198947.1 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    14325213   159169.0        0     0.017     0.027     0.036     0.052     2.972
+PUT     3580025    39778.1        0     0.024     0.036     0.045     0.074     1.925
+all    17905238   198947.1        0     0.018     0.031     0.039     0.056     2.972
+generator CPU: 2.53 of 10 CPUs (25%)
+[13:16:34] E1 redis rep 2 N=8: starting clean cluster
+[13:16:54] E1 redis rep 2 N=8: load for 120s
+system=redis read=replicas threads=8 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 311918.7 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    22458777   249542.0        0     0.022     0.034     0.040     0.078     3.033
+PUT     5613910    62376.8        0     0.029     0.043     0.051     0.115     3.023
+all    28072687   311918.7        0     0.024     0.037     0.045     0.087     3.033
+generator CPU: 5.25 of 10 CPUs (53%)
+[13:19:05] E1 redis rep 2 N=16: starting clean cluster
+[13:19:23] E1 redis rep 2 N=16: load for 120s
+system=redis read=replicas threads=16 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 426206.2 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    30690303   341003.4        0     0.034     0.057     0.074     0.199     3.722
+PUT     7668258    85202.9        0     0.035     0.058     0.075     0.175     3.443
+all    38358561   426206.2        0     0.034     0.057     0.074     0.193     3.722
+generator CPU: 7.01 of 10 CPUs (70%)
+[13:21:38] E1 redis rep 2 N=32: starting clean cluster
+[13:21:57] E1 redis rep 2 N=32: load for 120s
+system=redis read=replicas threads=32 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 488275.8 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    35153621   390595.8        0     0.063     0.115     0.174     0.684     6.178
+PUT     8791197    97680.0        0     0.041     0.081     0.119     0.273     5.113
+all    43944818   488275.8        0     0.059     0.111     0.166     0.651     6.178
+generator CPU: 6.89 of 10 CPUs (69%)
+[13:24:14] E1 redis rep 2 N=64: starting clean cluster
+[13:24:33] E1 redis rep 2 N=64: load for 120s
+system=redis read=replicas threads=64 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 515518.9 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    37119868   412443.0        0     0.130     0.235     0.326     0.679    10.599
+PUT     9276834   103075.9        0     0.049     0.123     0.217     0.566     6.529
+all    46396702   515518.9        0     0.117     0.227     0.316     0.656    10.599
+generator CPU: 7.04 of 10 CPUs (70%)
+[13:26:52] E1 redis rep 2 N=128: starting clean cluster
+[13:27:10] E1 redis rep 2 N=128: load for 120s
+system=redis read=replicas threads=128 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 521993.6 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    37584413   417604.6        0     0.268     0.527     0.731     1.261    10.658
+PUT     9395010   104389.0        0     0.055     0.167     0.337     0.918     9.115
+all    46979423   521993.6        0     0.232     0.506     0.704     1.238    10.658
+generator CPU: 7.07 of 10 CPUs (71%)
+[13:29:30] E1 redis rep 2 N=256: starting clean cluster
+[13:29:49] E1 redis rep 2 N=256: load for 120s
+system=redis read=replicas threads=256 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 531358.8 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    38257628   425084.8        0     0.547     1.080     1.402     2.152    12.472
+PUT     9564664   106274.0        0     0.065     0.245     0.550     1.569     7.217
+all    47822292   531358.8        0     0.459     1.040     1.351     2.090    12.472
+generator CPU: 7.14 of 10 CPUs (71%)
+[13:32:08] E1 redis rep 2 N=512: starting clean cluster
+[13:32:27] E1 redis rep 2 N=512: load for 120s
+system=redis read=replicas threads=512 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 509345.5 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    36673248   407480.5        0     1.238     2.522     3.205     3.870    17.908
+PUT     9167846   101865.0        0     0.065     0.257     0.462     1.237     8.974
+all    45841094   509345.5        0     0.573     2.453     3.134     3.773    17.908
+generator CPU: 6.94 of 10 CPUs (69%)
+[13:34:46] E1 redis rep 3 N=1: starting clean cluster
+[13:35:05] E1 redis rep 3 N=1: load for 120s
+system=redis read=replicas threads=1 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 89789.6 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     6464053    71822.8        0     0.009     0.011     0.017     0.023     1.020
+PUT     1617013    17966.8        0     0.015     0.019     0.024     0.086     0.509
+all     8081066    89789.6        0     0.010     0.016     0.019     0.041     1.020
+generator CPU: 0.54 of 10 CPUs (5%)
+[13:37:07] E1 redis rep 3 N=2: starting clean cluster
+[13:37:26] E1 redis rep 3 N=2: load for 120s
+system=redis read=replicas threads=2 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 130875.6 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     9423509   104705.7        0     0.012     0.026     0.030     0.063     2.057
+PUT     2355294    26169.9        0     0.018     0.027     0.036     0.100     2.110
+all    11778803   130875.6        0     0.013     0.026     0.031     0.073     2.110
+generator CPU: 0.96 of 10 CPUs (10%)
+[13:39:30] E1 redis rep 3 N=4: starting clean cluster
+[13:39:50] E1 redis rep 3 N=4: load for 120s
+system=redis read=replicas threads=4 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 195042.6 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    14043892   156043.2        0     0.017     0.028     0.037     0.076     3.452
+PUT     3509940    38999.3        0     0.024     0.037     0.046     0.095     1.545
+all    17553832   195042.6        0     0.019     0.032     0.041     0.081     3.452
+generator CPU: 2.54 of 10 CPUs (25%)
+[13:41:57] E1 redis rep 3 N=8: starting clean cluster
+[13:42:17] E1 redis rep 3 N=8: load for 120s
+system=redis read=replicas threads=8 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 304618.3 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    21933450   243705.0        0     0.023     0.035     0.043     0.165     3.263
+PUT     5482201    60913.3        0     0.030     0.045     0.055     0.200     3.031
+all    27415651   304618.3        0     0.024     0.038     0.048     0.175     3.263
+generator CPU: 5.16 of 10 CPUs (52%)
+[13:44:27] E1 redis rep 3 N=16: starting clean cluster
+[13:44:46] E1 redis rep 3 N=16: load for 120s
+system=redis read=replicas threads=16 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 428014.2 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    30820275   342447.5        0     0.034     0.057     0.073     0.189     4.463
+PUT     7701002    85566.7        0     0.035     0.057     0.074     0.189     3.703
+all    38521277   428014.2        0     0.034     0.057     0.073     0.189     4.463
+generator CPU: 7.04 of 10 CPUs (70%)
+[13:47:01] E1 redis rep 3 N=32: starting clean cluster
+[13:47:19] E1 redis rep 3 N=32: load for 120s
+system=redis read=replicas threads=32 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 503697.5 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    36264423   402938.0        0     0.062     0.107     0.150     0.302     7.547
+PUT     9068356   100759.5        0     0.041     0.081     0.117     0.289     7.512
+all    45332779   503697.5        0     0.058     0.104     0.146     0.300     7.547
+generator CPU: 6.97 of 10 CPUs (70%)
+[13:49:37] E1 redis rep 3 N=64: starting clean cluster
+[13:49:57] E1 redis rep 3 N=64: load for 120s
+system=redis read=replicas threads=64 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 528177.6 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    38029788   422553.2        0     0.127     0.221     0.314     0.553     7.333
+PUT     9506193   105624.4        0     0.048     0.128     0.226     0.580     6.276
+all    47535981   528177.6        0     0.116     0.213     0.304     0.557     7.333
+generator CPU: 7.04 of 10 CPUs (70%)
+[13:52:15] E1 redis rep 3 N=128: starting clean cluster
+[13:52:34] E1 redis rep 3 N=128: load for 120s
+system=redis read=replicas threads=128 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 536778.4 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    38648425   429426.9        0     0.262     0.487     0.664     1.155     6.794
+PUT     9661630   107351.4        0     0.055     0.180     0.382     1.056     6.714
+all    48310055   536778.4        0     0.235     0.470     0.640     1.136     6.794
+generator CPU: 7.14 of 10 CPUs (71%)
+[13:54:54] E1 redis rep 3 N=256: starting clean cluster
+[13:55:12] E1 redis rep 3 N=256: load for 120s
+system=redis read=replicas threads=256 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 540163.4 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    38891082   432123.1        0     0.544     1.009     1.302     2.064    10.151
+PUT     9723628   108040.3        0     0.064     0.242     0.577     1.825    11.450
+all    48614710   540163.4        0     0.472     0.976     1.268     2.037    11.450
+generator CPU: 7.17 of 10 CPUs (72%)
+[13:57:32] E1 redis rep 3 N=512: starting clean cluster
+[13:57:50] E1 redis rep 3 N=512: load for 120s
+system=redis read=replicas threads=512 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 510356.9 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    36745448   408282.8        0     1.214     2.492     3.200     4.191    22.667
+PUT     9186675   102074.2        0     0.063     0.259     0.493     1.968    14.121
+all    45932123   510356.9        0     0.614     2.419     3.125     4.033    22.667
+generator CPU: 6.89 of 10 CPUs (69%)
+ Container n1 Stopping 
+ Container n2 Stopping 
+ Container gerador Stopping 
+ Container n3 Stopping 
+ Container n3 Stopped 
+ Container n3 Removing 
+ Container n3 Removed 
+ Container n1 Stopped 
+ Container n1 Removing 
+ Container n1 Removed 
+ Container n2 Stopped 
+ Container n2 Removing 
+ Container n2 Removed 
+ Container gerador Stopped 
+ Container gerador Removing 
+ Container gerador Removed 
+ Network lab_cluster Removing 
+ Network lab_clientes Removing 
+ Network lab_cluster Removed 
+ Network lab_clientes Removed 
+[14:00:19] E1 redis: done. Summary: go run ./cmd/analyze e1
+[14:00:20] optimal N of etcd: 1
+[14:00:20] optimal N of redis: 8
+[14:00:20] E2 etcd rep 1 N=1: starting clean cluster
+[14:00:24] E2 etcd rep 1: load for 180s
+system=etcd read=linearizable threads=1 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 3284.4 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      393991     2626.6        0     0.138     0.207     0.595     2.726    34.747
+PUT       98663      657.8        0     0.701     1.187     6.272    14.560    68.453
+all      492654     3284.4        0     0.146     0.754     1.256     7.200    68.453
+generator CPU: 0.25 of 10 CPUs (2%)
+[14:03:26] E2 etcd rep 2 N=1: starting clean cluster
+[14:03:41] E2 etcd rep 2: load for 180s
+system=etcd read=linearizable threads=1 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 3256.6 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      390679     2604.5        0     0.140     0.218     0.589     2.730    33.663
+PUT       97808      652.1        0     0.704     1.196     6.273    15.139    46.320
+all      488487     3256.6        0     0.148     0.761     1.260     7.252    46.320
+generator CPU: 0.26 of 10 CPUs (3%)
+[14:06:43] E2 etcd rep 3 N=1: starting clean cluster
+[14:06:57] E2 etcd rep 3: load for 180s
+[14:13:43] continuing with N=16 (etcd) and N=8 (redis)
+usage: e2.sh <etcd|redis> <N> [repetitions]
+usage: e3.sh <etcd|redis> [pairs] [repetitions]
+usage: e4.sh <etcd|redis> <N> [repetitions]
+usage: e5.sh <etcd|redis> <N> [repetitions]
+usage: e6.sh <etcd|redis> <N> [repetitions]
+usage: e2.sh <etcd|redis> <N> [repetitions]
+usage: e3.sh <etcd|redis> [pairs] [repetitions]
+usage: e4.sh <etcd|redis> <N> [repetitions]
+usage: e5.sh <etcd|redis> <N> [repetitions]
+usage: e6.sh <etcd|redis> <N> [repetitions]
+[14:13:43] E1 etcd rep 1 N=1024: starting clean cluster
+[14:13:48] E1 etcd rep 1 N=1024: load for 120s
+system=etcd read=linearizable threads=1024 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 56285.3 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     4052963    45032.9        0    15.294    42.975   119.706   226.402   328.685
+PUT     1012716    11252.4        0    10.047    29.080    79.035   146.792   199.626
+all     5065679    56285.3        0    14.176    40.389   114.173   221.042   328.685
+generator CPU: 2.04 of 10 CPUs (20%)
+[14:15:51] E1 etcd rep 1 N=2048: starting clean cluster
+[14:16:06] E1 etcd rep 1 N=2048: load for 120s
+system=etcd read=linearizable threads=2048 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 65507.8 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     4715522    52394.7        0    27.882    72.388   155.311   254.440   350.430
+PUT     1180176    13113.1        0    18.924    49.603   103.256   156.448   228.473
+all     5895698    65507.8        0    26.033    68.245   145.819   249.594   350.430
+generator CPU: 2.17 of 10 CPUs (22%)
+[14:18:13] E1 etcd rep 2 N=1024: starting clean cluster
+[14:18:26] E1 etcd rep 2 N=1024: load for 120s
+system=etcd read=linearizable threads=1024 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 56062.4 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     4036515    44850.2        0    15.692    41.612   110.976   225.725   338.840
+PUT     1009099    11212.2        0    10.332    28.427    75.030   149.754   220.836
+all     5045614    56062.4        0    14.579    38.814   102.336   211.220   338.840
+generator CPU: 2.08 of 10 CPUs (21%)
+[14:20:30] E1 etcd rep 2 N=2048: starting clean cluster
+[14:20:45] E1 etcd rep 2 N=2048: load for 120s
+system=etcd read=linearizable threads=2048 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 64603.9 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     4650219    51669.1        0    28.060    76.496   152.861   232.668   336.589
+PUT     1164131    12934.8        0    19.121    51.596   103.668   146.552   208.731
+all     5814350    64603.9        0    26.231    71.180   145.547   226.351   336.589
+generator CPU: 2.16 of 10 CPUs (22%)
+[14:22:49] E1 etcd rep 3 N=1024: starting clean cluster
+[14:23:03] E1 etcd rep 3 N=1024: load for 120s
+system=etcd read=linearizable threads=1024 routing=rotation window=25s (warm-up 30s) seed=1
+throughput 59772.2 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1189613    47830.8        0    15.525    35.859    74.134   232.666   387.440
+PUT      296999    11941.4        0    10.098    26.133    48.573   154.515   243.034
+all     1486612    59772.2        0    14.345    33.952    70.982   223.519   387.440
+generator CPU: 2.22 of 10 CPUs (22%)
+[14:24:28] E2 to E6 with N=16 (etcd) and N=8 (redis)
+[14:24:28] E2 etcd rep 1 N=16: starting clean cluster
+[14:24:32] E2 etcd rep 1: load for 180s
+system=etcd read=linearizable threads=16 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 8473.4 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1016416     6776.1        0     1.446     4.697     9.431    24.730    76.475
+PUT      254589     1697.3        0     1.432     4.512     8.906    23.531    75.540
+all     1271005     8473.4        0     1.442     4.673     9.332    24.638    76.475
+generator CPU: 0.45 of 10 CPUs (5%)
+[14:27:38] E2 etcd rep 2 N=16: starting clean cluster
+[14:27:51] E2 etcd rep 2: load for 180s
+system=etcd read=linearizable threads=16 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 8256.0 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      990095     6600.6        0     1.452     5.528    10.470    26.099    94.238
+PUT      248302     1655.3        0     1.437     5.864     9.560    26.090    76.047
+all     1238397     8256.0        0     1.448     5.582    10.320    26.099    94.238
+generator CPU: 0.44 of 10 CPUs (4%)
+[14:30:54] E2 etcd rep 3 N=16: starting clean cluster
+[14:31:08] E2 etcd rep 3: load for 180s
+system=etcd read=linearizable threads=16 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 8199.6 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      983356     6555.7        0     1.459     5.891    10.616    27.008    72.882
+PUT      246590     1643.9        0     1.445     6.177     9.646    26.207    72.323
+all     1229946     8199.6        0     1.456     5.956    10.421    26.811    72.882
+generator CPU: 0.44 of 10 CPUs (4%)
+ Container n3 Stopping 
+ Container n2 Stopping 
+ Container n1 Stopping 
+ Container gerador Stopping 
+ Container n2 Stopped 
+ Container n2 Removing 
+ Container n2 Removed 
+ Container n3 Stopped 
+ Container n3 Removing 
+ Container n3 Removed 
+ Container n1 Stopped 
+ Container n1 Removing 
+ Container n1 Removed 
+ Container gerador Stopped 
+ Container gerador Removing 
+ Container gerador Removed 
+ Network lab_cluster Removing 
+ Network lab_clientes Removing 
+ Network lab_cluster Removed 
+ Network lab_clientes Removed 
+[14:34:21] E2 etcd: done
+[14:34:21] E3 etcd normal rep 1: starting clean cluster
+[14:34:25] E3 etcd normal rep 1: 10000 pairs
+system=etcd read=linearizable write=n1 read-node=n3 pairs=10000 in 9.7s
+PUT ok 10000 failed 0   GET ok 10000 failed 0   missing 0
+stale reads: 0 of 10000 (0.000%), max lag 0 confirmed writes
+PUT p50 0.718 ms p99 1.995 ms   GET p50 0.128 ms p99 0.582 ms
+[14:34:35] E3 etcd normal rep 2: starting clean cluster
+[14:34:49] E3 etcd normal rep 2: 10000 pairs
+system=etcd read=linearizable write=n1 read-node=n3 pairs=10000 in 9.4s
+PUT ok 10000 failed 0   GET ok 10000 failed 0   missing 0
+stale reads: 0 of 10000 (0.000%), max lag 0 confirmed writes
+PUT p50 0.701 ms p99 1.540 ms   GET p50 0.157 ms p99 0.833 ms
+[14:34:59] E3 etcd normal rep 3: starting clean cluster
+[14:35:13] E3 etcd normal rep 3: 10000 pairs
+system=etcd read=linearizable write=n1 read-node=n3 pairs=10000 in 12.3s
+PUT ok 10000 failed 0   GET ok 10000 failed 0   missing 0
+stale reads: 0 of 10000 (0.000%), max lag 0 confirmed writes
+PUT p50 0.708 ms p99 7.107 ms   GET p50 0.159 ms p99 0.985 ms
+[14:35:25] E3 etcd delay rep 1: starting clean cluster
+rtt min/avg/max/mdev = 100.027/100.144/100.217/0.081 ms
+[14:35:44] E3 etcd delay rep 1: 10000 pairs
+system=etcd read=linearizable write=n1 read-node=n3 pairs=1744 in 701.6s
+PUT ok 1743 failed 1   GET ok 1743 failed 1   missing 0
+stale reads: 0 of 1743 (0.000%), max lag 0 confirmed writes
+PUT p50 201.421 ms p99 202.632 ms   GET p50 200.922 ms p99 201.529 ms
+[14:47:41] E2 to E6 with N=16 (etcd) and N=8 (redis)
+[14:47:41] E2 etcd rep 1: already done, skipping
+[14:47:41] E2 etcd rep 2: already done, skipping
+[14:47:41] E2 etcd rep 3: already done, skipping
+ Container n1 Stopping 
+ Container n2 Stopping 
+ Container gerador Stopping 
+ Container n3 Stopping 
+ Container n1 Stopped 
+ Container n1 Removing 
+ Container n1 Removed 
+ Container n3 Stopped 
+ Container n3 Removing 
+ Container n3 Removed 
+ Container n2 Stopped 
+ Container n2 Removing 
+ Container n2 Removed 
+ Container gerador Stopped 
+ Container gerador Removing 
+ Container gerador Removed 
+ Network lab_clientes Removing 
+ Network lab_cluster Removing 
+ Network lab_clientes Removed 
+ Network lab_cluster Removed 
+[14:47:52] E2 etcd: done
+[14:47:52] E3 etcd normal rep 1: already done, skipping
+[14:47:52] E3 etcd normal rep 2: already done, skipping
+[14:47:52] E3 etcd normal rep 3: already done, skipping
+[14:47:52] E3 etcd delay rep 1: starting clean cluster
+rtt min/avg/max/mdev = 100.026/100.091/100.238/0.078 ms
+[14:48:18] E3 etcd delay rep 1: 10000 pairs, 20 coordinators of 500
+     20 stale reads: 0 of 500 (0.000%), max lag 0 confirmed writes
+[14:51:38] E3 etcd delay rep 2: starting clean cluster
+rtt min/avg/max/mdev = 100.056/100.181/100.321/0.092 ms
+[14:51:57] E3 etcd delay rep 2: 10000 pairs, 20 coordinators of 500
+     20 stale reads: 0 of 500 (0.000%), max lag 0 confirmed writes
+[14:55:18] E3 etcd delay rep 3: starting clean cluster
+rtt min/avg/max/mdev = 100.022/100.132/100.256/0.093 ms
+[14:55:37] E3 etcd delay rep 3: 10000 pairs, 20 coordinators of 500
+     20 stale reads: 0 of 500 (0.000%), max lag 0 confirmed writes
+ Container n3 Stopping 
+ Container gerador Stopping 
+ Container n2 Stopping 
+ Container n1 Stopping 
+ Container n2 Stopped 
+ Container n2 Removing 
+ Container n2 Removed 
+ Container n1 Stopped 
+ Container n1 Removing 
+ Container n1 Removed 
+ Container n3 Stopped 
+ Container n3 Removing 
+ Container n3 Removed 
+ Container gerador Stopped 
+ Container gerador Removing 
+ Container gerador Removed 
+ Network lab_clientes Removing 
+ Network lab_cluster Removing 
+ Network lab_clientes Removed 
+ Network lab_cluster Removed 
+[14:59:08] E3 etcd: done
+[14:59:08] E4 etcd rep 1 N=16: starting clean cluster
+rtt min/avg/max/mdev = 100.015/100.160/100.286/0.103 ms
+[14:59:16] E4 etcd rep 1: load for 180s with 50ms per direction
+system=etcd read=linearizable threads=16 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 64.8 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET        7762       51.7        0   298.787   400.741   401.183   410.470   411.097
+PUT        1959       13.1        0   200.694   201.532   202.816   210.133   210.225
+all        9721       64.8        0   201.579   400.701   401.115   404.557   411.097
+generator CPU: 0.01 of 10 CPUs (0%)
+[15:03:10] E4 etcd rep 2 N=16: starting clean cluster
+rtt min/avg/max/mdev = 100.066/100.264/100.530/0.210 ms
+[15:03:29] E4 etcd rep 2: load for 180s with 50ms per direction
+system=etcd read=linearizable threads=16 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 63.7 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET        7630       50.9        0   299.908   400.729   400.975   401.750   402.969
+PUT        1923       12.8        0   200.678   201.552   202.184   210.454   210.844
+all        9553       63.7        0   203.954   400.676   400.936   401.524   402.969
+generator CPU: 0.01 of 10 CPUs (0%)
+[15:07:23] E4 etcd rep 3 N=16: starting clean cluster
+rtt min/avg/max/mdev = 100.052/100.115/100.249/0.069 ms
+[15:07:42] E4 etcd rep 3: load for 180s with 50ms per direction
+system=etcd read=linearizable threads=16 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 65.1 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET        7783       51.9        0   298.820   400.703   401.140   402.203   408.415
+PUT        1977       13.2        0   200.677   201.366   202.101   210.294   210.556
+all        9760       65.1        0   202.816   400.581   401.072   402.164   408.415
+generator CPU: 0.01 of 10 CPUs (0%)
+ Container n1 Stopping 
+ Container n2 Stopping 
+ Container n3 Stopping 
+ Container gerador Stopping 
+ Container n3 Stopped 
+ Container n3 Removing 
+ Container n3 Removed 
+ Container n1 Stopped 
+ Container n1 Removing 
+ Container n1 Removed 
+ Container n2 Stopped 
+ Container n2 Removing 
+ Container n2 Removed 
+ Container gerador Stopped 
+ Container gerador Removing 
+ Container gerador Removed 
+ Network lab_clientes Removing 
+ Network lab_cluster Removing 
+ Network lab_clientes Removed 
+ Network lab_cluster Removed 
+[15:11:46] E4 etcd: done
+[15:11:46] E5 etcd rep 1 N=16: starting clean cluster
+[15:11:50] E5 etcd rep 1: coordinator before the partition: n3
+[15:11:50] load start
+[15:12:50] partition
+[15:13:50] heal
+system=etcd read=linearizable threads=16 routing=pinned window=150s (warm-up 30s) seed=1
+throughput 8105.9 req/s   errors 174 (164 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      972220     6481.5      134     1.234     4.109     9.151    24.550  1970.384
+PUT      243666     1624.4       40     1.257     3.635     8.668    25.020  1970.263
+all     1215886     8105.9      174     1.240     4.061     9.065    24.644  1970.384
+generator CPU: 0.44 of 10 CPUs (4%)
+errors in the whole run:
+      164  context deadline exceeded
+       10  rpc error: code = DeadlineExceeded desc = context deadline exceeded
+[15:14:52] load end
+[15:14:53] E5 etcd rep 1: checking convergence
+keys 10000, nodes n1 n2 n3
+divergent keys: 0
+n1: lost writes 0, unknown values 0, in flight at the end 4, missing keys 0, read errors 0
+n2: lost writes 0, unknown values 0, in flight at the end 4, missing keys 0, read errors 0
+n3: lost writes 0, unknown values 0, in flight at the end 4, missing keys 0, read errors 0
+[15:14:59] E5 etcd rep 2 N=16: starting clean cluster
+[15:15:14] E5 etcd rep 2: coordinator before the partition: n3
+[15:15:15] load start
+[15:16:15] partition
+[15:17:15] heal
+system=etcd read=linearizable threads=16 routing=pinned window=150s (warm-up 30s) seed=1
+throughput 8143.3 req/s   errors 184 (179 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      976691     6511.3      152     1.203     4.159     9.232    22.692  1320.156
+PUT      244806     1632.0       32     1.232     3.761     8.669    23.728    75.491
+all     1221497     8143.3      184     1.211     4.120     9.120    22.800  1320.156
+generator CPU: 0.42 of 10 CPUs (4%)
+errors in the whole run:
+      178  context deadline exceeded
+        4  rpc error: code = DeadlineExceeded desc = context deadline exceeded
+        1  etcdserver: request timed out, possibly due to connection lost
+        1  etcdserver: request timed out
+[15:18:17] load end
+[15:18:17] E5 etcd rep 2: checking convergence
+keys 10000, nodes n1 n2 n3
+divergent keys: 0
+n1: lost writes 0, unknown values 0, in flight at the end 6, missing keys 0, read errors 0
+n2: lost writes 0, unknown values 0, in flight at the end 6, missing keys 0, read errors 0
+n3: lost writes 0, unknown values 0, in flight at the end 6, missing keys 0, read errors 0
+[15:18:24] E5 etcd rep 3 N=16: starting clean cluster
+[15:18:39] E5 etcd rep 3: coordinator before the partition: n3
+[15:18:39] load start
+[15:19:39] partition
+[15:20:39] heal
+system=etcd read=linearizable threads=16 routing=pinned window=150s (warm-up 30s) seed=1
+throughput 8347.7 req/s   errors 174 (164 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1001288     6675.3      137     1.208     3.930     8.918    21.027  1977.764
+PUT      250863     1672.4       37     1.232     3.361     8.441    20.975  1977.638
+all     1252151     8347.7      174     1.214     3.871     8.812    21.020  1977.764
+generator CPU: 0.43 of 10 CPUs (4%)
+errors in the whole run:
+      164  context deadline exceeded
+       10  rpc error: code = DeadlineExceeded desc = context deadline exceeded
+[15:21:42] load end
+[15:21:42] E5 etcd rep 3: checking convergence
+keys 10000, nodes n1 n2 n3
+divergent keys: 0
+n1: lost writes 0, unknown values 0, in flight at the end 1, missing keys 0, read errors 0
+n2: lost writes 0, unknown values 0, in flight at the end 1, missing keys 0, read errors 0
+n3: lost writes 0, unknown values 0, in flight at the end 1, missing keys 0, read errors 0
+ Container gerador Stopping 
+ Container n2 Stopping 
+ Container n1 Stopping 
+ Container n3 Stopping 
+ Container n1 Stopped 
+ Container n1 Removing 
+ Container n1 Removed 
+ Container n2 Stopped 
+ Container n2 Removing 
+ Container n2 Removed 
+ Container n3 Stopped 
+ Container n3 Removing 
+ Container n3 Removed 
+ Container gerador Stopped 
+ Container gerador Removing 
+ Container gerador Removed 
+ Network lab_cluster Removing 
+ Network lab_clientes Removing 
+ Network lab_clientes Removed 
+ Network lab_cluster Removed 
+[15:21:59] E5 etcd: done
+[15:21:59] E6 etcd leader rep 1 N=16: starting clean cluster
+[15:22:04] load start
+[15:23:04] kill n2
+[15:24:04] start n2
+system=etcd read=linearizable threads=16 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 8477.8 req/s   errors 27 (22 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1016928     6779.5       23     1.375     5.593     9.977    25.189  1029.737
+PUT      254745     1698.3        4     1.336     5.922     9.187    20.983    67.302
+all     1271673     8477.8       27     1.366     5.651     9.847    24.869  1029.737
+generator CPU: 0.41 of 10 CPUs (4%)
+errors in the whole run:
+       21  context deadline exceeded
+        3  rpc error: code = Unavailable desc = error reading from server: connection reset by peer
+        2  etcdserver: leader changed
+        1  etcdserver: request timed out
+[15:25:06] load end
+[15:25:06] E6 etcd leader rep 2 N=16: starting clean cluster
+[15:25:21] load start
+[15:26:22] kill n3
+[15:27:22] start n3
+system=etcd read=linearizable threads=16 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 8490.0 req/s   errors 32 (21 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1018342     6788.9       23     1.386     4.928     9.471    26.054  1285.860
+PUT      255153     1701.0        9     1.341     4.539     8.900    25.295  1285.315
+all     1273495     8490.0       32     1.375     4.878     9.367    25.814  1285.860
+generator CPU: 0.42 of 10 CPUs (4%)
+errors in the whole run:
+       21  context deadline exceeded
+        8  etcdserver: leader changed
+        3  rpc error: code = Unavailable desc = error reading from server: EOF
+[15:28:24] load end
+[15:28:24] E6 etcd leader rep 3 N=16: starting clean cluster
+[15:28:39] load start
+[15:29:39] kill n3
+[15:30:39] start n3
+system=etcd read=linearizable threads=16 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 8575.5 req/s   errors 34 (24 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1028533     6856.9       25     1.376     4.570     9.301    25.251  1422.945
+PUT      257793     1718.6        9     1.333     4.155     8.753    24.467    65.334
+all     1286326     8575.5       34     1.366     4.510     9.211    25.084  1422.945
+generator CPU: 0.42 of 10 CPUs (4%)
+errors in the whole run:
+       24  context deadline exceeded
+        7  etcdserver: leader changed
+        2  rpc error: code = Unavailable desc = error reading from server: connection reset by peer
+        1  etcdserver: request timed out
+[15:31:41] load end
+[15:31:41] E6 etcd follower rep 1 N=16: starting clean cluster
+[15:31:55] load start
+[15:32:55] kill n1
+[15:33:55] start n1
+system=etcd read=linearizable threads=16 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 8713.5 req/s   errors 36 (20 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1045191     6967.9       30     1.374     4.342     9.536    24.138    76.068
+PUT      261837     1745.6        6     1.334     4.056     9.011    21.371    74.404
+all     1307028     8713.5       36     1.364     4.300     9.435    23.474    76.068
+generator CPU: 0.43 of 10 CPUs (4%)
+errors in the whole run:
+       20  context deadline exceeded
+       16  rpc error: code = Unavailable desc = error reading from server: connection reset by peer
+[15:34:57] load end
+[15:34:58] E6 etcd follower rep 2 N=16: starting clean cluster
+[15:35:12] load start
+[15:36:12] kill n1
+[15:37:12] start n1
+system=etcd read=linearizable threads=16 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 8475.9 req/s   errors 34 (20 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1016623     6777.5       25     1.383     5.021    10.134    27.657   259.046
+PUT      254764     1698.4        9     1.340     5.295     9.570    27.456    74.784
+all     1271387     8475.9       34     1.373     5.053    10.058    27.642   259.046
+generator CPU: 0.42 of 10 CPUs (4%)
+errors in the whole run:
+       20  context deadline exceeded
+       14  rpc error: code = Unavailable desc = error reading from server: connection reset by peer
+[15:38:14] load end
+[15:38:14] E6 etcd follower rep 3 N=16: starting clean cluster
+[15:38:28] load start
+[15:39:29] kill n1
+[15:40:29] start n1
+system=etcd read=linearizable threads=16 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 8663.9 req/s   errors 22 (20 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1039201     6928.0       20     1.372     4.716     9.549    23.460    96.870
+PUT      260390     1735.9        2     1.332     4.370     8.823    21.609    90.606
+all     1299591     8663.9       22     1.362     4.671     9.406    22.917    96.870
+generator CPU: 0.42 of 10 CPUs (4%)
+errors in the whole run:
+       20  context deadline exceeded
+        2  rpc error: code = Unavailable desc = error reading from server: connection reset by peer
+[15:41:31] load end
+ Container gerador Stopping 
+ Container n2 Stopping 
+ Container n3 Stopping 
+ Container n1 Stopping 
+ Container n1 Stopped 
+ Container n1 Removing 
+ Container n1 Removed 
+ Container n3 Stopped 
+ Container n3 Removing 
+ Container n3 Removed 
+ Container n2 Stopped 
+ Container n2 Removing 
+ Container n2 Removed 
+ Container gerador Stopped 
+ Container gerador Removing 
+ Container gerador Removed 
+ Network lab_clientes Removing 
+ Network lab_cluster Removing 
+ Network lab_clientes Removed 
+ Network lab_cluster Removed 
+[15:41:41] E6 etcd: done
+[15:41:42] E2 redis rep 1 N=8: starting clean cluster
+[15:41:50] E2 redis rep 1: load for 180s
+system=redis read=replicas threads=8 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 290147.9 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    34819276   232128.5        0     0.023     0.037     0.051     0.217     4.500
+PUT     8702911    58019.4        0     0.030     0.048     0.062     0.273     3.939
+all    43522187   290147.9        0     0.025     0.041     0.055     0.221     4.500
+generator CPU: 4.93 of 10 CPUs (49%)
+[15:45:06] E2 redis rep 2 N=8: starting clean cluster
+[15:45:25] E2 redis rep 2: load for 180s
+system=redis read=replicas threads=8 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 309994.7 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    37200736   248004.9        0     0.023     0.034     0.041     0.071     3.309
+PUT     9298463    61989.8        0     0.029     0.044     0.052     0.122     3.064
+all    46499199   309994.7        0     0.024     0.037     0.046     0.083     3.309
+generator CPU: 5.22 of 10 CPUs (52%)
+[15:48:40] E2 redis rep 3 N=8: starting clean cluster
+[15:48:59] E2 redis rep 3: load for 180s
+system=redis read=replicas threads=8 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 311867.7 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    37425650   249504.3        0     0.022     0.034     0.040     0.071     3.047
+PUT     9354511    62363.4        0     0.029     0.044     0.052     0.113     3.048
+all    46780161   311867.7        0     0.024     0.037     0.046     0.081     3.048
+generator CPU: 5.25 of 10 CPUs (53%)
+ Container n3 Stopping 
+ Container gerador Stopping 
+ Container n1 Stopping 
+ Container n2 Stopping 
+ Container n2 Stopped 
+ Container n2 Removing 
+ Container n2 Removed 
+ Container n3 Stopped 
+ Container n3 Removing 
+ Container n3 Removed 
+ Container n1 Stopped 
+ Container n1 Removing 
+ Container n1 Removed 
+ Container gerador Stopped 
+ Container gerador Removing 
+ Container gerador Removed 
+ Network lab_clientes Removing 
+ Network lab_cluster Removing 
+ Network lab_clientes Removed 
+ Network lab_cluster Removed 
+[15:52:25] E2 redis: done
+[15:52:25] E3 redis normal rep 1: starting clean cluster
+[15:52:34] E3 redis normal rep 1: 10000 pairs, 20 coordinators of 500
+      2 stale reads: 68 of 500 (13.600%), max lag 1 confirmed writes
+      1 stale reads: 84 of 500 (16.800%), max lag 1 confirmed writes
+      1 stale reads: 81 of 500 (16.200%), max lag 1 confirmed writes
+[15:52:34] E3 redis normal rep 2: starting clean cluster
+[15:52:52] E3 redis normal rep 2: 10000 pairs, 20 coordinators of 500
+      4 stale reads: 6 of 500 (1.200%), max lag 1 confirmed writes
+      3 stale reads: 8 of 500 (1.600%), max lag 1 confirmed writes
+      2 stale reads: 9 of 500 (1.800%), max lag 1 confirmed writes
+[15:52:53] E3 redis normal rep 3: starting clean cluster
+[15:53:11] E3 redis normal rep 3: 10000 pairs, 20 coordinators of 500
+      5 stale reads: 18 of 500 (3.600%), max lag 1 confirmed writes
+      4 stale reads: 10 of 500 (2.000%), max lag 1 confirmed writes
+      2 stale reads: 8 of 500 (1.600%), max lag 1 confirmed writes
+[15:53:11] E3 redis delay rep 1: starting clean cluster
+rtt min/avg/max/mdev = 100.155/100.369/100.595/0.150 ms
+[15:53:36] E3 redis delay rep 1: 10000 pairs, 20 coordinators of 500
+     19 stale reads: 500 of 500 (100.000%), max lag 500 confirmed writes
+      1 stale reads: 500 of 500 (100.000%), max lag 498 confirmed writes
+[15:53:36] E3 redis delay rep 2: starting clean cluster
+rtt min/avg/max/mdev = 100.207/100.363/100.449/0.082 ms
+[15:54:00] E3 redis delay rep 2: 10000 pairs, 20 coordinators of 500
+     19 stale reads: 500 of 500 (100.000%), max lag 500 confirmed writes
+      1 stale reads: 500 of 500 (100.000%), max lag 490 confirmed writes
+[15:54:00] E3 redis delay rep 3: starting clean cluster
+rtt min/avg/max/mdev = 100.071/100.216/100.339/0.100 ms
+[15:54:24] E3 redis delay rep 3: 10000 pairs, 20 coordinators of 500
+     19 stale reads: 500 of 500 (100.000%), max lag 500 confirmed writes
+      1 stale reads: 500 of 500 (100.000%), max lag 486 confirmed writes
+ Container n2 Stopping 
+ Container gerador Stopping 
+ Container n3 Stopping 
+ Container n1 Stopping 
+ Container n2 Stopped 
+ Container n2 Removing 
+ Container n2 Removed 
+ Container n3 Stopped 
+ Container n3 Removing 
+ Container n3 Removed 
+ Container n1 Stopped 
+ Container n1 Removing 
+ Container n1 Removed 
+ Container gerador Stopped 
+ Container gerador Removing 
+ Container gerador Removed 
+ Network lab_clientes Removing 
+ Network lab_cluster Removing 
+ Network lab_cluster Removed 
+ Network lab_clientes Removed 
+[15:54:34] E3 redis: done
+[15:54:34] E4 redis rep 1 N=8: starting clean cluster
+rtt min/avg/max/mdev = 100.074/100.288/100.421/0.126 ms
+[15:54:47] E4 redis rep 1: load for 180s with 50ms per direction
+system=redis read=replicas threads=8 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 319832.9 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    38380749   255871.7        0     0.022     0.037     0.071     0.133     3.254
+PUT     9594186    63961.2        0     0.023     0.033     0.041     0.174     3.128
+all    47974935   319832.9        0     0.022     0.036     0.066     0.143     3.254
+generator CPU: 5.41 of 10 CPUs (54%)
+[15:58:03] E4 redis rep 2 N=8: starting clean cluster
+rtt min/avg/max/mdev = 100.070/100.254/100.451/0.131 ms
+[15:58:27] E4 redis rep 2: load for 180s with 50ms per direction
+system=redis read=replicas threads=8 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 318413.9 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    38210555   254737.0        0     0.022     0.036     0.080     0.183     3.102
+PUT     9551525    63676.8        0     0.022     0.033     0.041     0.210     3.232
+all    47762080   318413.9        0     0.022     0.035     0.072     0.185     3.232
+generator CPU: 5.38 of 10 CPUs (54%)
+[16:01:43] E4 redis rep 3 N=8: starting clean cluster
+rtt min/avg/max/mdev = 100.089/100.375/100.516/0.161 ms
+[16:02:06] E4 redis rep 3: load for 180s with 50ms per direction
+system=redis read=replicas threads=8 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 317401.0 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    38089184   253927.9        0     0.022     0.036     0.083     0.185     3.262
+PUT     9520971    63473.1        0     0.022     0.033     0.041     0.222     3.106
+all    47610155   317401.0        0     0.022     0.036     0.075     0.188     3.262
+generator CPU: 5.38 of 10 CPUs (54%)
+ Container gerador Stopping 
+ Container n3 Stopping 
+ Container n1 Stopping 
+ Container n2 Stopping 
+ Container n3 Stopped 
+ Container n3 Removing 
+ Container n3 Removed 
+ Container n2 Stopped 
+ Container n2 Removing 
+ Container n2 Removed 
+ Container n1 Stopped 
+ Container n1 Removing 
+ Container n1 Removed 
+ Container gerador Stopped 
+ Container gerador Removing 
+ Container gerador Removed 
+ Network lab_cluster Removing 
+ Network lab_clientes Removing 
+ Network lab_cluster Removed 
+ Network lab_clientes Removed 
+[16:05:32] E4 redis: done
+[16:05:33] E5 redis rep 1 N=8: starting clean cluster
+[16:05:41] E5 redis rep 1: coordinator before the partition: n1
+[16:05:41] load start
+[16:06:41] partition
+[16:07:41] heal
+system=redis read=replicas threads=8 routing=pinned window=150s (warm-up 30s) seed=1
+throughput 314083.8 req/s   errors 5 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    37691888   251279.3        5     0.022     0.037     0.048     0.066     4.053
+PUT     9420681    62804.5        0     0.028     0.047     0.056     0.087     4.052
+all    47112569   314083.8        5     0.023     0.040     0.051     0.070     4.053
+generator CPU: 5.31 of 10 CPUs (53%)
+errors in the whole run:
+        5  LOADING Redis is loading the dataset in memory
+[16:09:04] load end
+[16:09:04] E5 redis rep 1: checking convergence
+keys 10000, nodes n1 n2 n3
+divergent keys: 0
+n1: lost writes 0, unknown values 0, in flight at the end 2, missing keys 0, read errors 0
+n2: lost writes 0, unknown values 0, in flight at the end 2, missing keys 0, read errors 0
+n3: lost writes 0, unknown values 0, in flight at the end 2, missing keys 0, read errors 0
+[16:09:16] E5 redis rep 2 N=8: starting clean cluster
+[16:09:34] E5 redis rep 2: coordinator before the partition: n1
+[16:09:34] load start
+[16:10:35] partition
+[16:11:35] heal
+system=redis read=replicas threads=8 routing=pinned window=150s (warm-up 30s) seed=1
+throughput 309719.1 req/s   errors 4 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    37167800   247785.3        4     0.022     0.037     0.049     0.098    20.628
+PUT     9290065    61933.8        0     0.028     0.048     0.057     0.121     3.299
+all    46457865   309719.1        4     0.023     0.041     0.052     0.103    20.628
+generator CPU: 5.26 of 10 CPUs (53%)
+errors in the whole run:
+        4  LOADING Redis is loading the dataset in memory
+[16:12:57] load end
+[16:12:57] E5 redis rep 2: checking convergence
+keys 10000, nodes n1 n2 n3
+divergent keys: 0
+n1: lost writes 0, unknown values 0, in flight at the end 0, missing keys 0, read errors 0
+n2: lost writes 0, unknown values 0, in flight at the end 0, missing keys 0, read errors 0
+n3: lost writes 0, unknown values 0, in flight at the end 0, missing keys 0, read errors 0
+[16:13:09] E5 redis rep 3 N=8: starting clean cluster
+[16:13:29] E5 redis rep 3: coordinator before the partition: n1
+[16:13:29] load start
+[16:14:29] partition
+[16:15:29] heal
+system=redis read=replicas threads=8 routing=pinned window=150s (warm-up 30s) seed=1
+throughput 312652.2 req/s   errors 5 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    37519837   250132.2        5     0.022     0.037     0.049     0.138     3.718
+PUT     9377988    62519.9        0     0.028     0.047     0.057     0.122     3.391
+all    46897825   312652.2        5     0.023     0.041     0.052     0.136     3.718
+generator CPU: 5.25 of 10 CPUs (52%)
+errors in the whole run:
+        5  LOADING Redis is loading the dataset in memory
+[16:16:52] load end
+[16:16:52] E5 redis rep 3: checking convergence
+keys 10000, nodes n1 n2 n3
+divergent keys: 0
+n1: lost writes 0, unknown values 0, in flight at the end 1, missing keys 0, read errors 0
+n2: lost writes 0, unknown values 0, in flight at the end 1, missing keys 0, read errors 0
+n3: lost writes 0, unknown values 0, in flight at the end 1, missing keys 0, read errors 0
+ Container n3 Stopping 
+ Container gerador Stopping 
+ Container n2 Stopping 
+ Container n1 Stopping 
+ Container n3 Stopped 
+ Container n3 Removing 
+ Container n1 Stopped 
+ Container n1 Removing 
+ Container n3 Removed 
+ Container n1 Removed 
+ Container n2 Stopped 
+ Container n2 Removing 
+ Container n2 Removed 
+ Container gerador Stopped 
+ Container gerador Removing 
+ Container gerador Removed 
+ Network lab_cluster Removing 
+ Network lab_clientes Removing 
+ Network lab_cluster Removed 
+ Network lab_clientes Removed 
+[16:17:14] E5 redis: done
+[16:17:14] E6 redis leader rep 1 N=8: starting clean cluster
+[16:17:23] load start
+[16:18:23] kill n1
+redis: 2026/11/18 19:18:31 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:18:31 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:18:31 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:18:31 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:18:31 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:18:31 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:18:31 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:18:31 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:18:42 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:18:42 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:18:42 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:18:42 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:18:42 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:18:42 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:18:42 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+[16:19:23] start n1
+system=redis read=replicas threads=8 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 196006.9 req/s   errors 38065 (39 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    23552472   157016.5       12     0.021     0.033     0.041     0.117     5.883
+PUT     5848561    38990.4    38053     0.027     0.042     0.051     0.135     4.438
+all    29401033   196006.9    38065     0.022     0.036     0.045     0.120     5.883
+generator CPU: 3.13 of 10 CPUs (31%)
+errors in the whole run:
+    29063  dial tcp 172.31.0.11:6379: i/o timeout
+     8943  dial tcp 172.31.0.11:6379: connect: no route to host
+       39  context deadline exceeded
+       12  LOADING Redis is loading the dataset in memory
+        8  EOF
+[16:20:38] load end
+[16:20:38] E6 redis leader rep 2 N=8: starting clean cluster
+[16:20:57] load start
+[16:21:58] kill n1
+redis: 2026/11/18 19:22:06 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:22:06 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:22:06 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:22:06 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:22:06 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:22:06 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:22:06 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:22:06 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:22:16 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:22:16 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:22:16 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:22:16 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:22:16 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:22:16 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:22:16 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+[16:22:58] start n1
+system=redis read=replicas threads=8 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 188873.8 req/s   errors 38116 (39 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    22696167   151307.8       11     0.022     0.034     0.044     0.170     4.814
+PUT     5634907    37566.0    38105     0.028     0.044     0.057     0.213     3.112
+all    28331074   188873.8    38116     0.023     0.037     0.049     0.175     4.814
+generator CPU: 3.07 of 10 CPUs (31%)
+errors in the whole run:
+    29084  dial tcp 172.31.0.11:6379: i/o timeout
+     8974  dial tcp 172.31.0.11:6379: connect: no route to host
+       39  context deadline exceeded
+       11  LOADING Redis is loading the dataset in memory
+        8  EOF
+[16:24:13] load end
+[16:24:13] E6 redis leader rep 3 N=8: starting clean cluster
+[16:24:32] load start
+[16:25:32] kill n1
+redis: 2026/11/18 19:25:41 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:25:41 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:25:41 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:25:41 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:25:41 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:25:41 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:25:41 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:25:41 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:25:51 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:25:51 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:25:51 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:25:51 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:25:51 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:25:51 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+redis: 2026/11/18 19:25:51 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.11:6379: i/o timeout
+[16:26:32] start n1
+system=redis read=replicas threads=8 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 189830.6 req/s   errors 38274 (39 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    22811041   152073.6       12     0.022     0.034     0.042     0.144     3.344
+PUT     5663555    37757.0    38262     0.028     0.044     0.060     0.184     3.298
+all    28474596   189830.6    38274     0.023     0.037     0.048     0.165     3.344
+generator CPU: 3.08 of 10 CPUs (31%)
+errors in the whole run:
+    26271  dial tcp 172.31.0.11:6379: i/o timeout
+    11944  dial tcp 172.31.0.11:6379: connect: no route to host
+       39  context deadline exceeded
+       12  LOADING Redis is loading the dataset in memory
+        8  EOF
+[16:27:47] load end
+[16:27:47] E6 redis follower rep 1 N=8: starting clean cluster
+[16:28:07] load start
+[16:29:07] kill n2
+redis: 2026/11/18 19:29:18 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:29:21 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:29:24 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:29:27 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:29:30 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:29:33 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:29:36 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:29:38 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: connect: no route to host
+redis: 2026/11/18 19:29:41 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: connect: no route to host
+redis: 2026/11/18 19:29:43 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:29:44 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: connect: no route to host
+[16:30:07] start n2
+system=redis read=replicas threads=8 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 303019.6 req/s   errors 55 (11 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    36363470   242423.1       55     0.024     0.036     0.043     0.064     7.091
+PUT     9089469    60596.5        0     0.026     0.041     0.049     0.112     4.511
+all    45452939   303019.6       55     0.024     0.037     0.045     0.070     7.091
+generator CPU: 4.80 of 10 CPUs (48%)
+errors in the whole run:
+       20  dial tcp 172.31.0.12:6379: connect: no route to host
+       11  context deadline exceeded
+        8  EOF
+        8  LOADING Redis is loading the dataset in memory
+        7  dial tcp 172.31.0.12:6379: i/o timeout
+        1  dial tcp 172.31.0.12:6379: connect: connection refused
+[16:31:27] load end
+[16:31:27] E6 redis follower rep 2 N=8: starting clean cluster
+[16:31:46] load start
+[16:32:46] kill n2
+redis: 2026/11/18 19:32:58 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:33:01 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:33:04 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:33:07 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:33:10 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:33:13 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:33:16 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:33:19 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:33:22 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:33:25 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:33:28 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+[16:33:46] start n2
+system=redis read=replicas threads=8 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 300870.3 req/s   errors 54 (11 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    36105484   240703.2       54     0.024     0.037     0.044     0.069     3.145
+PUT     9025056    60167.0        0     0.026     0.041     0.050     0.134     3.124
+all    45130540   300870.3       54     0.024     0.038     0.045     0.083     3.145
+generator CPU: 4.78 of 10 CPUs (48%)
+errors in the whole run:
+       15  dial tcp 172.31.0.12:6379: i/o timeout
+       12  dial tcp 172.31.0.12:6379: connect: no route to host
+       11  context deadline exceeded
+        8  LOADING Redis is loading the dataset in memory
+        8  EOF
+[16:35:08] load end
+[16:35:08] E6 redis follower rep 3 N=8: starting clean cluster
+[16:35:26] load start
+[16:36:26] kill n2
+redis: 2026/11/18 19:36:37 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:36:40 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:36:43 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:36:46 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:36:49 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:36:52 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:36:55 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:36:58 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:37:01 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:37:04 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+redis: 2026/11/18 19:37:07 pool.go:770: redis: connection pool: failed to dial after 5 attempts: dial tcp 172.31.0.12:6379: i/o timeout
+[16:37:26] start n2
+system=redis read=replicas threads=8 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 297898.0 req/s   errors 54 (11 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    35749106   238327.4       54     0.024     0.037     0.045     0.075     3.446
+PUT     8935596    59570.6        0     0.026     0.041     0.050     0.137     3.053
+all    44684702   297898.0       54     0.024     0.038     0.046     0.086     3.446
+generator CPU: 4.78 of 10 CPUs (48%)
+errors in the whole run:
+       18  dial tcp 172.31.0.12:6379: i/o timeout
+       11  context deadline exceeded
+        9  dial tcp 172.31.0.12:6379: connect: no route to host
+        8  LOADING Redis is loading the dataset in memory
+        8  EOF
+[16:38:48] load end
+ Container gerador Stopping 
+ Container n1 Stopping 
+ Container n2 Stopping 
+ Container n3 Stopping 
+ Container n1 Stopped 
+ Container n1 Removing 
+ Container n3 Stopped 
+ Container n3 Removing 
+ Container n1 Removed 
+ Container n3 Removed 
+ Container n2 Stopped 
+ Container n2 Removing 
+ Container n2 Removed 
+ Container gerador Stopped 
+ Container gerador Removing 
+ Container gerador Removed 
+ Network lab_clientes Removing 
+ Network lab_cluster Removing 
+ Network lab_clientes Removed 
+ Network lab_cluster Removed 
+[16:38:59] E6 redis: done
+[16:38:59] E1 etcd rep 1 N=1024: starting clean cluster
+[16:39:04] E1 etcd rep 1 N=1024: load for 120s
+[16:46:31] E1 extension (N=1024, 2048) done; series finished. Log lines after 16:39 were lost to a deleted inode; see loadgen.txt in each run directory.

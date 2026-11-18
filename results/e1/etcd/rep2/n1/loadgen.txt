@@ -1,0 +1,7 @@
+system=etcd read=linearizable threads=1 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 3276.9 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET      235746     2619.4        0     0.138     0.209     0.594     3.044    37.512
+PUT       59178      657.5        0     0.701     1.189     6.219    15.371    49.208
+all      294924     3276.9        0     0.147     0.753     1.248     7.348    49.208
+generator CPU: 0.25 of 10 CPUs (3%)

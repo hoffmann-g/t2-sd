@@ -1,0 +1,7 @@
+system=redis read=replicas threads=256 routing=rotation window=90s (warm-up 30s) seed=1
+throughput 518141.9 req/s   errors 0 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    37305402   414504.5        0     0.570     1.064     1.363     2.127     8.260
+PUT     9327373   103637.5        0     0.067     0.250     0.583     1.843    19.175
+all    46632775   518141.9        0     0.472     1.029     1.329     2.095    19.175
+generator CPU: 7.15 of 10 CPUs (72%)

@@ -1,0 +1,10 @@
+system=etcd read=linearizable threads=16 routing=rotation window=150s (warm-up 30s) seed=1
+throughput 8663.9 req/s   errors 22 (20 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1039201     6928.0       20     1.372     4.716     9.549    23.460    96.870
+PUT      260390     1735.9        2     1.332     4.370     8.823    21.609    90.606
+all     1299591     8663.9       22     1.362     4.671     9.406    22.917    96.870
+generator CPU: 0.42 of 10 CPUs (4%)
+errors in the whole run:
+       20  context deadline exceeded
+        2  rpc error: code = Unavailable desc = error reading from server: connection reset by peer

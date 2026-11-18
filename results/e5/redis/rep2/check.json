@@ -1,0 +1,15 @@
+{
+  "keys": 10000,
+  "nodes": [
+    "n1",
+    "n2",
+    "n3"
+  ],
+  "divergent_keys": 0,
+  "lost_writes_per_node": {},
+  "unknown_values_per_node": {},
+  "in_flight_values_per_node": {},
+  "missing_keys_per_node": {},
+  "read_errors_per_node": {},
+  "examples": null
+}

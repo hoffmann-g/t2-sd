@@ -1,0 +1,10 @@
+system=etcd read=linearizable threads=16 routing=pinned window=150s (warm-up 30s) seed=1
+throughput 8347.7 req/s   errors 174 (164 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET     1001288     6675.3      137     1.208     3.930     8.918    21.027  1977.764
+PUT      250863     1672.4       37     1.232     3.361     8.441    20.975  1977.638
+all     1252151     8347.7      174     1.214     3.871     8.812    21.020  1977.764
+generator CPU: 0.43 of 10 CPUs (4%)
+errors in the whole run:
+      164  context deadline exceeded
+       10  rpc error: code = DeadlineExceeded desc = context deadline exceeded

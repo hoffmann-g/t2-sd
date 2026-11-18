@@ -1,0 +1,9 @@
+system=redis read=replicas threads=8 routing=pinned window=150s (warm-up 30s) seed=1
+throughput 312652.2 req/s   errors 5 (0 timeouts)
+             ok      req/s   errors    p50 ms    p95 ms    p99 ms  p99.9 ms    max ms
+GET    37519837   250132.2        5     0.022     0.037     0.049     0.138     3.718
+PUT     9377988    62519.9        0     0.028     0.047     0.057     0.122     3.391
+all    46897825   312652.2        5     0.023     0.041     0.052     0.136     3.718
+generator CPU: 5.25 of 10 CPUs (52%)
+errors in the whole run:
+        5  LOADING Redis is loading the dataset in memory

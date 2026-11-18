@@ -32,7 +32,7 @@ Cada configuração foi executada 3 vezes, de cluster limpo. As tabelas trazem a
 
 ![E1](figures/e1-saturation.png)
 
-N de 1 a 512, 2 min por ponto, 3 repetições. Mediana das repetições; a variação entre elas ficou abaixo de 5% na vazão em todos os pontos. Tabela completa, com mínimo e máximo, CPU de cada nó e do gerador, em `results/e1/e1.md`.
+N de 1 a 512 nos dois sistemas e até 2.048 no etcd, 2 min por ponto, 3 repetições. Mediana das repetições; a variação entre elas ficou abaixo de 5% na vazão em todos os pontos. Tabela completa, com mínimo e máximo, CPU de cada nó e do gerador, em `results/e1/e1.md`.
 
 | N | etcd req/s | etcd p99 (ms) | req/s por ms | Redis req/s | Redis p99 (ms) | req/s por ms |
 |---:|---:|---:|---:|---:|---:|---:|
@@ -46,12 +46,12 @@ N de 1 a 512, 2 min por ponto, 3 repetições. Mediana das repetições; a varia
 | 128 | 21.281 | 31,29 | 680 | 521.994 | 0,65 | 0,8 M |
 | 256 | 30.181 | 51,15 | 590 | 531.359 | 1,33 | 0,4 M |
 | 512 | 44.125 | 64,35 | 686 | 509.345 | 3,13 | 0,16 M |
-| 1024 | (preencher) | | | | | |
-| 2048 | (preencher) | | | | | |
+| 1024 | 56.598 | 98,81 | 573 | | | |
+| 2048 | 64.604 | 145,82 | 443 | | | |
 
 **Redis.** Ponto ótimo em N = 8: 304,6 mil req/s com p99 de 0,05 ms (6,5 M req/s por ms). Platô de N = 64 a 512, com vazão máxima sustentada de 531 mil req/s (N = 256); em N = 512 a vazão já cai e o p99 sobe para 3,1 ms. Os nós Redis usam de 0,5 a 0,6 núcleo cada no platô (o servidor é single-thread), enquanto os CPUs do gerador ficam entre 75% e 93% ocupados contando o tempo de kernel (29% de sistema e 15% de softirq no host inteiro durante a rodada). O platô do Redis é, portanto, o limite do gerador e da pilha de rede do host, não do banco: a vazão máxima do Redis nesta máquina é de pelo menos 531 mil req/s. Como os 16 CPUs lógicos já estavam todos alocados (6 aos nós, 10 ao gerador), não havia como adicionar um segundo processo gerador com capacidade própria.
 
-**etcd.** A razão vazão/p99 é máxima em N = 1 (2.623 req/s por ms), que é o ponto sem contenção: o p99 salta de 1,25 ms para 5,2 ms já em N = 2, porque a leitura linearizável de um cliente passa a esperar o `fsync` da escrita do outro. Para N ≥ 2 a razão fica estável entre 590 e 852, com máximo em N = 16, e esse foi o N de referência dos experimentos E2 a E6 (um único cliente não exercita os três nós, e o E5 exige ao menos um cliente por nó). A vazão continua crescendo até N = 512 (44,1 mil req/s, p99 de 64 ms), sem platô; a curva foi estendida com N = 1.024 e 2.048 (preencher: resultado da extensão e vazão máxima sustentada). O gerador ficou abaixo de 15% de CPU em todos os pontos do etcd.
+**etcd.** A razão vazão/p99 é máxima em N = 1 (2.623 req/s por ms), que é o ponto sem contenção: o p99 salta de 1,25 ms para 5,2 ms já em N = 2, porque a leitura linearizável de um cliente passa a esperar o `fsync` da escrita do outro. Para N ≥ 2 a razão fica estável entre 590 e 852, com máximo em N = 16, e esse foi o N de referência dos experimentos E2 a E6 (um único cliente não exercita os três nós, e o E5 exige ao menos um cliente por nó). A vazão continua crescendo até N = 512 (44,1 mil req/s, p99 de 64 ms), sem platô, e a curva foi estendida: 56,6 mil req/s em N = 1.024 (p99 de 99 ms) e 64,6 mil em N = 2.048 (p99 de 146 ms), ainda sem erros. O crescimento desacelera (28% de 512 para 1.024, 14% de 1.024 para 2.048), mas não há dois pontos dentro de 5% um do outro, então o platô não foi alcançado; a vazão máxima observada é 64,6 mil req/s, e o limite prático da curva é o timeout de 2 s, do qual o p99 de 146 ms ainda está longe. A razão vazão/p99 cai de forma contínua a partir de N = 16. O gerador ficou abaixo de 15% de CPU em todos os pontos do etcd; o crescimento sem platô vem do agrupamento de propostas por `fsync`, analisado na pergunta 2.
 
 ## 4. E2 e E4. Latência por percentil
 
@@ -92,13 +92,13 @@ Configuração de consistência usada: no etcd, PUT confirmado pelo quórum e GE
 ![E5 etcd](figures/e5-etcd.png)
 ![E5 Redis](figures/e5-redis.png)
 
-Carga do E2 com cada cliente preso a um nó (16 clientes no etcd: 6 no n1 e 5 em cada outro; 8 no Redis: 3 no n1, 3 no n2, 2 no n3). Aos 60 s, `docker network disconnect` tira o n1 da rede entre nós (ele continua na rede dos clientes); aos 120 s o n1 é reconectado; a carga vai até 180 s. Antes de cada medição foi verificado que n2 alcança n3, n1 não alcança n2 e o gerador alcança n1. Depois da carga, `check` lê todas as chaves em todos os nós e compara com as escritas confirmadas da rodada. Nas três repetições do etcd, o líder era n3, e n1 um seguidor. As figuras mostram as requisições atendidas por segundo por nó e os erros por segundo; a tabela traz os totais por fase (mediana das repetições).
+Carga do E2 com cada cliente preso a um nó (16 clientes no etcd: 6 no n1 e 5 em cada outro; 8 no Redis: 3 no n1, 3 no n2, 2 no n3). Aos 60 s, `docker network disconnect` tira o n1 da rede entre nós (ele continua na rede dos clientes); aos 120 s o n1 é reconectado; a carga vai até 180 s. Antes de cada medição foi verificado que n2 alcança n3, n1 não alcança n2 e o gerador alcança n1. Depois da carga, `check` lê todas as chaves em todos os nós e compara com as escritas confirmadas da rodada. Nas três repetições do etcd, o líder era n3, e n1 um seguidor. As figuras mostram as requisições atendidas por segundo por nó e os erros por segundo; a tabela traz os totais por fase da repetição 3 (as três são equivalentes; todas em `results/e5/e5.csv`).
 
 | sistema | fase | n1 (isolado) | n2 e n3 |
 |---|---|---|---|
-| etcd | 60 s de partição | GET 2.461 ok / 137 erros; PUT 646 ok / 37 erros; sem resposta em 29 dos 60 s (os ok são do primeiro segundo, antes de o nó perder o líder) | GET 370.498 ok, PUT 93.093 ok, 0 erros |
-| etcd | 60 s após a cura | GET 121.232 ok, PUT 30.182 ok, 0 a 4 erros | 0 erros |
-| Redis | 60 s de partição | GET 5.818.667 ok, PUT 4.000.556 ok, 0 erros (primário isolado continua aceitando escritas) | GET 10.2 milhões ok, 0 erros (réplicas sem contato com o primário continuam lendo o estado anterior) |
+| etcd | 60 s de partição | GET 2.461 ok / 137 erros; PUT 646 ok / 37 erros; sem resposta em 29 dos 60 s (os ok são do primeiro segundo, antes de o nó perder o líder) | GET 371.684 ok, PUT 93.093 ok, 0 erros |
+| etcd | 60 s após a cura | GET 126.556 ok, PUT 31.458 ok, 0 a 4 erros | 0 erros |
+| Redis | 60 s de partição | GET 5.818.667 ok, PUT 4.000.556 ok, 0 erros (primário isolado continua aceitando escritas) | GET 10,2 milhões ok, 0 erros (réplicas sem contato com o primário continuam lendo o estado anterior) |
 | Redis | 60 s após a cura | 0 erros | 4 a 5 erros de GET (reconexão das réplicas na ressincronização) |
 
 Convergência após a cura, três repetições, nos dois sistemas: 0 chaves divergentes entre os nós, 0 escritas confirmadas perdidas, 0 valores desconhecidos (os únicos valores fora das amostras, 0 a 6 por rodada, são de requisições ainda em voo quando a carga terminou). No Redis a convergência vem da ressincronização parcial: ao reconectar, cada réplica informa seu offset e o primário reenvia o trecho do fluxo de replicação que ela perdeu durante os 60 s.
@@ -172,7 +172,8 @@ Os valores absolutos são da implementação e do ambiente. No etcd: o `fsync` a
 ## 9. Reprodução
 
 ```sh
-lab/scripts/all.sh            # série completa, cerca de 4 h
+lab/scripts/e1.sh etcd; lab/scripts/e1.sh redis    # E1, 70 min cada
+lab/scripts/rest.sh 16 8                            # E2 a E6 com o N de referência, cerca de 2 h
 go run ./cmd/analyze all      # tabelas (results/analysis.md e CSV)
 cd plots && uv run plots      # figuras
 go run ./cmd/viz              # demonstração ao vivo (http://localhost:8080)
