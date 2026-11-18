@@ -57,13 +57,33 @@ N de 1 a 512, 2 min por ponto, 3 repetições. Mediana das repetições; a varia
 
 ![E2 e E4](figures/e2e4-percentiles.png)
 
-(preencher: tabela e4e2; RTT medido; comentário)
+E2: 3 min sem falhas com o N de referência (16 no etcd, 8 no Redis). E4: a mesma carga com `tc netem delay 50ms` na interface da rede entre nós de cada nó, nos dois sentidos; o `ping` entre n1 e n2 antes de cada rodada mediu RTT de 100,1 a 100,2 ms. Janela de 150 s após 30 s de aquecimento, 3 repetições, mediana e (mínimo a máximo). Tabela completa em `results/e2/e2e4.csv`.
+
+| sistema | exp. | op. | req/s | p50 (ms) | p95 (ms) | p99 (ms) | erros |
+|---|---|---|---:|---:|---:|---:|---:|
+| etcd | E2 | GET | 6.601 (6.556 a 6.776) | 1,45 | 5,53 (4,70 a 5,89) | 10,47 (9,43 a 10,62) | 0 |
+| etcd | E2 | PUT | 1.655 (1.644 a 1.697) | 1,44 | 5,86 (4,51 a 6,18) | 9,56 (8,91 a 9,65) | 0 |
+| etcd | E4 | GET | 52 (51 a 52) | 298,8 | 400,7 | 401,1 | 0 |
+| etcd | E4 | PUT | 13 | 200,7 | 201,5 | 202,2 | 0 |
+| Redis | E2 | GET | (preencher) | | | | |
+| Redis | E2 | PUT | (preencher) | | | | |
+| Redis | E4 | GET | (preencher) | | | | |
+| Redis | E4 | PUT | (preencher) | | | | |
+
+No etcd a vazão caiu de 8,3 mil para 65 req/s (127 vezes) com o mesmo N, e a latência passou a ser um múltiplo exato do RTT. Por nó (repetição 1): no líder (n2), PUT p50 de 100,8 ms e GET p50 de 102,8 ms; nos seguidores, PUT de 200,8 ms e GET de 300,8 ms, com p99 de GET em 401 ms. A variação entre repetições ficou abaixo de 1 ms. No Redis, (preencher: resultado; esperado: sem mudança, porque cliente e primário continuam na rede sem atraso).
 
 ## 5. E3. Stale reads
 
 ![E3](figures/e3-stale-reads.png)
 
-(preencher: tabela e3)
+Coordenador: PUT(k, v) com v crescente no n1; quando o PUT retorna com sucesso, GET(k) no n3. Stale read: valor lido menor que o último v confirmado. PUT com erro não eleva o valor esperado. 10.000 pares por condição e repetição, divididos em 20 coordenadores simultâneos com chaves próprias (no etcd com atraso cada par leva 0,5 s), 3 repetições de cluster limpo.
+
+| sistema | rede | pares | stale reads | taxa | atraso máx. (escritas) | PUT p50 (ms) | GET p50 (ms) |
+|---|---|---:|---:|---:|---:|---:|---:|
+| etcd | original | 30.000 | 0 | 0,00% | 0 | 0,7 | 0,16 |
+| etcd | RTT 100 ms | 30.000 | 0 | 0,00% | 0 | 102 (n1 líder) ou 202 | 199 ou 299 |
+| Redis | original | (preencher) | | | | | |
+| Redis | RTT 100 ms | (preencher) | | | | | |
 
 Configuração de consistência usada: no etcd, PUT confirmado pelo quórum e GET linearizável; no Redis, PUT confirmado pelo primário e GET na réplica n3 sem nível de consistência configurável.
 
@@ -87,7 +107,13 @@ Configuração de consistência usada: no etcd, PUT confirmado pelo quórum e GE
 
 ### 8.1 Latência de escrita e vazão com rede lenta (E4)
 
-(preencher)
+No etcd cada operação virou um número inteiro de RTTs, e a vazão em laço fechado caiu na mesma proporção (16 clientes divididos por cerca de 250 ms de latência média dão os 65 req/s medidos).
+
+Escrita no líder, 1 RTT (100 ms): o líder anexa a proposta ao log e manda `AppendEntries` aos seguidores (50 ms); a confirmação de um deles fecha o quórum de 2 em 3 (mais 50 ms); o líder aplica e responde. É a rodada de "escrita" do consenso de época em CGR §5.3: a decisão exige aceite de um quórum, e o líder não pode responder antes. Escrita num seguidor, 2 RTTs (200 ms): o seguidor encaminha a proposta ao líder (50 ms), segue a rodada de 100 ms, e o seguidor só responde depois de saber o commit, que chega no `AppendEntries` seguinte (50 ms).
+
+Leitura linearizável no líder, 1 RTT (100 ms): antes de responder, o líder confirma que ainda é líder com uma rodada de heartbeat ao quórum (ReadIndex), para não servir uma leitura obsoleta se tiver sido deposto. Leitura num seguidor, 3 RTTs (300 ms): o pedido de ReadIndex vai ao líder (50 ms), o líder faz a rodada de heartbeat (100 ms) e devolve o índice (50 ms); o seguidor ainda precisa ter aplicado o log até esse índice, e com escritas em andamento isso espera o próximo commit propagado (mais 100 ms). O p99 de 401 ms corresponde ao caso de dois commits de espera.
+
+No Redis (preencher com o resultado): a escrita é confirmada pelo primário sem esperar réplica e o cliente está na rede sem atraso, então o atraso entre nós não entra no caminho da requisição; ele só aumenta o atraso de replicação, que aparece no E3 como stale reads.
 
 ### 8.2 O que limitou a vazão no E1
 
@@ -99,7 +125,9 @@ No Redis, a vazão foi limitada pelo gerador e pela pilha de rede do host, não 
 
 ### 8.3 Stale reads observados
 
-(preencher)
+No etcd, nenhum em 60.000 pares, com e sem atraso. É o esperado: o GET linearizável no n3 consulta o índice de commit do líder e espera o nó aplicar o log até ele, logo vê todo PUT que já retornou. O atraso de rede só muda o tempo da leitura (de 0,16 ms para 200 ou 300 ms), não o resultado. Qualquer anomalia aqui indicaria erro de configuração (por exemplo, leitura `serializable`); em teste prévio com essa opção, 19% das leituras no n3 foram stale.
+
+No Redis, (preencher: sem atraso, taxa; com atraso, taxa e atraso máximo). A escrita retorna assim que o primário a aplica; a réplica só a recebe depois do tempo de propagação, então a janela de leitura obsoleta é igual à latência entre n1 e n3 (50 ms com o `netem`). Sem atraso, na mesma máquina, a réplica aplica a escrita em dezenas de microssegundos, antes de a leitura seguinte chegar, e por isso quase nada é observado.
 
 ### 8.4 Partição: escritas e leituras de cada lado, C ou A, reconciliação
 
