@@ -89,12 +89,13 @@ def e1(results: Path, out: Path) -> list[Path]:
         plateau = g[g.plateau]
         if len(plateau) >= 2:
             ax.axvline(plateau.throughput_median.max(), color=c, lw=0.6, ls=":", alpha=0.7)
+    ax.set_xscale("log")
     ax.set_yscale("log")
-    ax.set_xlabel("effective throughput (successful requests per second)")
+    ax.set_xlabel("effective throughput (successful requests per second), log scale")
     ax.set_ylabel("p99 latency (ms), log scale")
     ax.set_title("E1. Latency against throughput, one point per N; circle: optimal point, dotted line: plateau")
-    ax.legend(loc="upper left")
-    ax.grid(True, which="minor", axis="y", alpha=0.4)
+    ax.legend(loc="lower right")
+    ax.grid(True, which="minor", alpha=0.4)
     path = out / "e1-saturation.png"
     fig.savefig(path)
     plt.close(fig)
@@ -118,16 +119,19 @@ def e2e4(results: Path, out: Path) -> list[Path]:
                 xs = [x + i * width for i in range(3)]
                 ax.bar(xs, vals, width=width * 0.9, color=OP[op], hatch=hatch, edgecolor="white", lw=0.5,
                        label=f"{op} {'E2 (normal)' if exp == 'e2' else 'E4 (RTT 100 ms)'}")
-                for xi, v in zip(xs, vals):
-                    ax.annotate(f"{v:.2g}", (xi, v), ha="center", va="bottom", fontsize=6.5, color=INK2,
-                                textcoords="offset points", xytext=(0, 1))
+                # Values on the p50 and p99 bars only; the p95 bar sits between them.
+                for xi, v, name in zip(xs, vals, ["p50", "p95", "p99"]):
+                    if name != "p95":
+                        ax.annotate(fmt_ms(v), (xi, v), ha="center", va="bottom", fontsize=6.5, color=INK2,
+                                    textcoords="offset points", xytext=(0, 1))
                 labels.append((x + width, f"{op} {exp.upper()}"))
                 x += 0.8
         ax.set_yscale("log")
         ax.set_xticks([p for p, _ in labels])
         ax.set_xticklabels([l for _, l in labels])
         ax.set_title(f"{system}: N = {int(g.N.iloc[0])}")
-        ax.set_ylabel("latency (ms), log scale; bars: p50, p95, p99")
+        if ax is axes[0, 0]:
+            ax.set_ylabel("latency (ms), log scale; bars: p50, p95, p99")
         ax.grid(axis="x", visible=False)
     fig.suptitle("E2 and E4. Latency per percentile with the same N, normal network and RTT of 100 ms between nodes", fontsize=10)
     path = out / "e2e4-percentiles.png"
@@ -139,6 +143,14 @@ def e2e4(results: Path, out: Path) -> list[Path]:
 def median_of(cell) -> float:
     """The median from a 'median (min to max)' cell, or the number itself."""
     return float(str(cell).split(" ")[0])
+
+
+def fmt_ms(v: float) -> str:
+    if v >= 100:
+        return f"{v:.0f}"
+    if v >= 10:
+        return f"{v:.1f}"
+    return f"{v:.2f}"
 
 
 def e3(results: Path, out: Path) -> list[Path]:
@@ -186,7 +198,7 @@ def fault_timeline(csv: Path, out: Path, exp: str, fault: str, recovery: str) ->
     for (system, variant), g in df.groupby(["system", "variant"], sort=True):
         reps = sorted(g.rep.unique())
         fig, axes = plt.subplots(2 * len(reps), 1, figsize=(8, 3.4 * len(reps)), sharex=True, squeeze=False,
-                                 gridspec_kw={"height_ratios": [3, 1] * len(reps), "hspace": 0.08})
+                                 gridspec_kw={"height_ratios": [3, 1] * len(reps)})
         for i, rep in enumerate(reps):
             ax, axe = axes[2 * i, 0], axes[2 * i + 1, 0]
             r = g[g.rep == rep]
@@ -223,7 +235,7 @@ def fault_timeline(csv: Path, out: Path, exp: str, fault: str, recovery: str) ->
                    loc="upper right", ncol=4, fontsize=8)
         title = {"e5": "E5. Partition of n1 (clients pinned to one node)", "e6": "E6. Node failure"}[exp]
         fig.suptitle(f"{title}: {system}{' ' + variant if variant else ''}", fontsize=10, x=0.01, ha="left")
-        fig.tight_layout(rect=(0, 0, 1, 0.93))
+        fig.tight_layout(rect=(0, 0, 1, 0.96), h_pad=0.4)
         path = out / f"{exp}-{system}{'-' + variant if variant else ''}.png"
         fig.savefig(path)
         plt.close(fig)
