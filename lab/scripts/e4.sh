@@ -30,7 +30,7 @@ for rep in $(seq 1 "$reps"); do
   "$SCRIPTS_DIR/rtt.sh" n1 n2 > "$RESULTS_DIR/$dir/rtt.txt"
   tail -1 "$RESULTS_DIR/$dir/rtt.txt"
   log "E4 $system rep $rep: load for $DURATION with $DELAY per direction"
-  "$SCRIPTS_DIR/run-load.sh" "$dir" -threads "$n" -duration "$DURATION" -warmup "$WARMUP" -samples
+  "$SCRIPTS_DIR/run-load.sh" "$dir" -threads "$n" -duration "$DURATION" -warmup "$WARMUP"
 done
 "$SCRIPTS_DIR/down.sh"
 log "E4 $system: done"

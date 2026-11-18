@@ -1,12 +1,13 @@
 // Command analyze combines the repetitions of an experiment stored under
-// results/ and prints its tables.
+// results/ and prints its tables, in Markdown, also writing them as CSV
+// next to the results.
 //
-//	go run ./cmd/analyze e1
-//
-// E1 prints, for each system, one row per thread count N with the median
-// over the repetitions (and the range between them) of the throughput and of
-// the p99 latency, and identifies the optimal point and the saturation. It
-// also writes results/e1/e1.csv with the same numbers.
+//	go run ./cmd/analyze e1       # saturation curve, optimal point and plateau
+//	go run ./cmd/analyze e2       # latency per percentile, E2 and E4 side by side
+//	go run ./cmd/analyze e3       # stale reads per system and condition
+//	go run ./cmd/analyze e5       # partition: requests per side and phase, convergence check
+//	go run ./cmd/analyze e6       # node failure: failover time, errors per phase
+//	go run ./cmd/analyze all
 package main
 
 import (
@@ -28,20 +29,133 @@ func main() {
 	log.SetPrefix("analyze: ")
 	dir := flag.String("results", "results", "directory with the results of the experiments")
 	flag.Usage = func() {
-		fmt.Fprintln(os.Stderr, "usage: analyze [-results dir] e1")
+		fmt.Fprintln(os.Stderr, "usage: analyze [-results dir] e1|e2|e3|e5|e6|all")
 		flag.PrintDefaults()
 	}
 	flag.Parse()
 
-	switch flag.Arg(0) {
-	case "e1":
-		if err := e1(*dir); err != nil {
-			log.Fatal(err)
-		}
-	default:
+	steps := map[string]func(string) error{"e1": e1, "e2": e2, "e3": e3, "e5": e5, "e6": e6}
+	var names []string
+	if flag.Arg(0) == "all" {
+		names = []string{"e1", "e2", "e3", "e5", "e6"}
+	} else if _, ok := steps[flag.Arg(0)]; ok {
+		names = []string{flag.Arg(0)}
+	} else {
 		flag.Usage()
 		os.Exit(2)
 	}
+	for _, n := range names {
+		if err := steps[n](*dir); err != nil {
+			if flag.Arg(0) == "all" {
+				fmt.Printf("%s: %v\n\n", n, err)
+				continue
+			}
+			log.Fatal(err)
+		}
+	}
+}
+
+func e2(dir string) error {
+	e2, err := results.LoadBaselines(dir, "e2")
+	if err != nil {
+		return err
+	}
+	e4, err := results.LoadBaselines(dir, "e4")
+	if err != nil {
+		return err
+	}
+	if len(e2)+len(e4) == 0 {
+		return fmt.Errorf("no E2 or E4 results under %s", dir)
+	}
+	fmt.Print("## E2 and E4: latency per percentile\n\n")
+	t := results.BaselineTable(e2, e4)
+	t.WriteMarkdown(os.Stdout)
+	for _, b := range e4 {
+		if b.RTT != "" {
+			fmt.Printf("\nE4 %s, RTT between nodes: %s\n", b.System, b.RTT)
+		}
+	}
+	fmt.Println()
+	return write(filepath.Join(dir, "e2", "e2e4.csv"), t)
+}
+
+func e3(dir string) error {
+	list, err := results.LoadE3(dir)
+	if err != nil {
+		return err
+	}
+	if len(list) == 0 {
+		return fmt.Errorf("no E3 results under %s", dir)
+	}
+	fmt.Print("## E3: stale reads\n\n")
+	t := results.StaleTable(list)
+	t.WriteMarkdown(os.Stdout)
+	for _, r := range list {
+		if r.RTT != "" {
+			fmt.Printf("\n%s with delay, RTT between nodes: %s\n", r.System, r.RTT)
+		}
+	}
+	fmt.Println()
+	return write(filepath.Join(dir, "e3", "e3.csv"), t)
+}
+
+func e5(dir string) error {
+	runs, err := results.LoadFaultRuns(dir, "e5")
+	if err != nil {
+		return err
+	}
+	if len(runs) == 0 {
+		return fmt.Errorf("no E5 results under %s", dir)
+	}
+	fmt.Print("## E5: partition of n1, requests per node and phase\n\n")
+	t := results.FaultTable(runs)
+	t.WriteMarkdown(os.Stdout)
+	fmt.Print("\nConvergence after the heal:\n\n")
+	results.CheckTable(runs).WriteMarkdown(os.Stdout)
+	fmt.Println()
+	if err := write(filepath.Join(dir, "e5", "e5.csv"), t); err != nil {
+		return err
+	}
+	return writeAligned(filepath.Join(dir, "e5", "e5-timeline.csv"), runs)
+}
+
+func e6(dir string) error {
+	runs, err := results.LoadFaultRuns(dir, "e6")
+	if err != nil {
+		return err
+	}
+	if len(runs) == 0 {
+		return fmt.Errorf("no E6 results under %s", dir)
+	}
+	fmt.Print("## E6: node failure\n\n")
+	results.FailoverTable(runs).WriteMarkdown(os.Stdout)
+	fmt.Print("\nRequests per node and phase:\n\n")
+	t := results.FaultTable(runs)
+	t.WriteMarkdown(os.Stdout)
+	fmt.Println()
+	if err := write(filepath.Join(dir, "e6", "e6.csv"), results.FailoverTable(runs)); err != nil {
+		return err
+	}
+	if err := write(filepath.Join(dir, "e6", "e6-phases.csv"), t); err != nil {
+		return err
+	}
+	return writeAligned(filepath.Join(dir, "e6", "e6-timeline.csv"), runs)
+}
+
+func write(path string, t results.Table) error {
+	if err := t.WriteCSV(path); err != nil {
+		return err
+	}
+	fmt.Printf("written: %s\n\n", path)
+	return nil
+}
+
+func writeAligned(path string, runs []results.FaultRun) error {
+	if err := results.WriteAlignedTimeline(path, runs); err != nil {
+		return err
+	}
+	fmt.Printf("written: %s\n\n", path)
+	return nil
 }
 
 func e1(dir string) error {

@@ -338,17 +338,22 @@ func WriteTimelineCSV(w io.Writer, tl []Interval) error {
 	return cw.Error()
 }
 
-// WriteSamplesCSV writes every sample of the run, gzip-compressed, one row
-// per request. Together with the client number, seq identifies the value
-// written by a PUT (see ParseStamp).
-func (r *Result) WriteSamplesCSV(w io.Writer) error {
-	zw := gzip.NewWriter(w)
+// WriteSamplesCSV writes the samples of the run, gzip-compressed, one row
+// per request. With all false, only PUTs and failed requests are written:
+// what the convergence check and the failover measurement need, at a
+// fraction of the size. Together with the client number, seq identifies the
+// value written by a PUT (see ParseStamp).
+func (r *Result) WriteSamplesCSV(w io.Writer, all bool) error {
+	zw, _ := gzip.NewWriterLevel(w, gzip.BestSpeed)
 	fmt.Fprintln(zw, "client,seq,start_unix_ns,latency_ns,op,key,node,status")
 	base := r.Start.UnixNano()
 	buf := make([]byte, 0, 96)
 	var werr error
 	for c, rec := range r.recs {
 		rec.each(func(i int, sm Sample) {
+			if !all && sm.Op() == Get && sm.Status() == OK {
+				return
+			}
 			buf = buf[:0]
 			buf = strconv.AppendInt(buf, int64(c), 10)
 			buf = append(buf, ',')

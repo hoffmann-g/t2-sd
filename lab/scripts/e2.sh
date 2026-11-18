@@ -25,7 +25,7 @@ for rep in $(seq 1 "$reps"); do
   log "E2 $system rep $rep N=$n: starting clean cluster"
   "$SCRIPTS_DIR/up.sh" "$system" 2>/dev/null
   log "E2 $system rep $rep: load for $DURATION"
-  "$SCRIPTS_DIR/run-load.sh" "$dir" -threads "$n" -duration "$DURATION" -warmup "$WARMUP" -samples
+  "$SCRIPTS_DIR/run-load.sh" "$dir" -threads "$n" -duration "$DURATION" -warmup "$WARMUP"
 done
 "$SCRIPTS_DIR/down.sh"
 log "E2 $system: done"

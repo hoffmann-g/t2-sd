@@ -67,7 +67,7 @@ N clients repeat, with no pause: draw an operation (80% GET, 20% PUT) and a key 
 
 By default the clients rotate over the nodes they can use (every node in etcd; the primary for writes and the replicas for reads in Redis) and skip a node for one second after a failed request. With `-pinned`, client i only uses node i mod 3, which shows what the clients of each node observe (E5).
 
-The output directory receives `summary.json` (throughput, p50/p95/p99 per operation and per node over the measured window, generator CPU use, error messages), `timeline.csv` (completions, errors and latency per second, per node and operation) and, with `-samples`, `samples.csv.gz` with every request.
+The output directory receives `summary.json` (throughput, p50/p95/p99 per operation and per node over the measured window, generator CPU use, error messages), `timeline.csv` (completions, errors and latency per second, per node and operation) and, with `-samples`, `samples.csv.gz` with every PUT and every failed request (`-samples-all` writes every request).
 
 The retries built into both client libraries are disabled, so every failure shows up in the samples.
 

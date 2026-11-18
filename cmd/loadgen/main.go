@@ -18,7 +18,8 @@
 // With -out, the directory receives summary.json (throughput, latency
 // percentiles and errors over the measured window), timeline.csv (requests
 // completed per second, per node and operation) and, with -samples,
-// samples.csv.gz (every request).
+// samples.csv.gz (every PUT and every failed request; -samples-all writes
+// every request).
 package main
 
 import (
@@ -70,7 +71,8 @@ func main() {
 	conns := flag.Int("conns", 0, "etcd: gRPC connections per node (default: one per 16 clients, at most 16)")
 	preload := flag.Bool("preload", true, "write every key once before the run")
 	out := flag.String("out", "", "directory for summary.json and timeline.csv")
-	samples := flag.Bool("samples", false, "with -out, also write samples.csv.gz with every request")
+	samples := flag.Bool("samples", false, "with -out, also write samples.csv.gz with every PUT and every failed request")
+	samplesAll := flag.Bool("samples-all", false, "like -samples, but with every request")
 	live := flag.Bool("live", false, "print the statistics of each second to stdout as JSON lines")
 	flag.Parse()
 
@@ -157,7 +159,7 @@ func main() {
 	printSummary(report, o)
 
 	if *out != "" {
-		if err := writeOutputs(*out, o, res, *samples); err != nil {
+		if err := writeOutputs(*out, o, res, *samples || *samplesAll, *samplesAll); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -197,7 +199,7 @@ func printSummary(w *os.File, o output) {
 	}
 }
 
-func writeOutputs(dir string, o output, res *load.Result, samples bool) error {
+func writeOutputs(dir string, o output, res *load.Result, samples, all bool) error {
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return err
 	}
@@ -226,7 +228,7 @@ func writeOutputs(dir string, o output, res *load.Result, samples bool) error {
 		if err != nil {
 			return err
 		}
-		if err := res.WriteSamplesCSV(f); err != nil {
+		if err := res.WriteSamplesCSV(f, all); err != nil {
 			f.Close()
 			return err
 		}

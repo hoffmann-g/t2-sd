@@ -71,7 +71,8 @@ for rep in $(seq 1 "$reps"); do
 
   log "E5 $system rep $rep: checking convergence"
   sleep 5
-  docker exec gerador check -samples "/results/$dir/samples.csv.gz" | tee "$RESULTS_DIR/$dir/check.txt"
+  docker exec gerador check -samples "/results/$dir/samples.csv.gz" -out "/results/$dir/check.json" |
+    tee "$RESULTS_DIR/$dir/check.txt"
 done
 "$SCRIPTS_DIR/down.sh"
 log "E5 $system: done"

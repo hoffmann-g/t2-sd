@@ -10,7 +10,9 @@
 //     was acknowledged and then discarded, or was applied before an older
 //     one;
 //   - unknown values: values that match no confirmed PUT of the run, for
-//     example a write that failed or timed out but was applied anyway.
+//     example a write that failed or timed out but was applied anyway. A
+//     value written by a request that was still in flight when the run
+//     ended is reported apart, since such requests are not recorded.
 //
 // Two PUTs that overlap in time may be applied in either order, so neither
 // counts as lost.
@@ -47,6 +49,7 @@ type report struct {
 	Divergent int            `json:"divergent_keys"`
 	Lost      map[string]int `json:"lost_writes_per_node"`
 	Unknown   map[string]int `json:"unknown_values_per_node"`
+	InFlight  map[string]int `json:"in_flight_values_per_node"`
 	Missing   map[string]int `json:"missing_keys_per_node"`
 	Errors    map[string]int `json:"read_errors_per_node"`
 	Examples  []string       `json:"examples"`
@@ -67,7 +70,7 @@ func main() {
 		os.Exit(2)
 	}
 
-	writes, maxStart, err := loadWrites(*samples)
+	writes, maxStart, lastSeq, err := loadWrites(*samples)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -78,7 +81,7 @@ func main() {
 	}
 	defer store.Close()
 
-	r := report{Keys: *keys, Lost: map[string]int{}, Unknown: map[string]int{}, Missing: map[string]int{}, Errors: map[string]int{}}
+	r := report{Keys: *keys, Lost: map[string]int{}, Unknown: map[string]int{}, InFlight: map[string]int{}, Missing: map[string]int{}, Errors: map[string]int{}}
 	for i := range addrs {
 		r.Nodes = append(r.Nodes, load.NodeName(i))
 	}
@@ -114,7 +117,10 @@ func main() {
 			values[node] = fmt.Sprintf("%d:%d", client, seq)
 			w, found := writes[stampKey{client, seq}]
 			if !found {
-				if maxStart[key] > 0 { // the run wrote this key, but not this value
+				switch {
+				case seq > lastSeq[client]:
+					r.InFlight[name]++ // sent by a client after its last recorded request
+				case maxStart[key] > 0: // the run wrote this key, but not this value
 					r.Unknown[name]++
 					example("%s on %s holds %s, which is not a confirmed write of the run", key, name, values[node])
 				}
@@ -135,8 +141,8 @@ func main() {
 	fmt.Printf("keys %d, nodes %s\n", r.Keys, strings.Join(r.Nodes, " "))
 	fmt.Printf("divergent keys: %d\n", r.Divergent)
 	for _, n := range r.Nodes {
-		fmt.Printf("%s: lost writes %d, unknown values %d, missing keys %d, read errors %d\n",
-			n, r.Lost[n], r.Unknown[n], r.Missing[n], r.Errors[n])
+		fmt.Printf("%s: lost writes %d, unknown values %d, in flight at the end %d, missing keys %d, read errors %d\n",
+			n, r.Lost[n], r.Unknown[n], r.InFlight[n], r.Missing[n], r.Errors[n])
 	}
 	if len(r.Examples) > 0 {
 		fmt.Println("examples:")
@@ -157,30 +163,36 @@ type stampKey struct {
 	seq    uint64
 }
 
-// loadWrites returns the confirmed PUTs of the run, by stamp, and the latest
-// start time of a confirmed PUT on each key, relative to the first sample.
-func loadWrites(path string) (map[stampKey]write, map[string]int64, error) {
+// loadWrites returns the confirmed PUTs of the run, by stamp, the latest
+// start time of a confirmed PUT on each key, relative to the first sample,
+// and the last sequence number recorded for each client.
+func loadWrites(path string) (map[stampKey]write, map[string]int64, map[int]uint64, error) {
 	f, err := os.Open(path)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 	defer f.Close()
 	zr, err := gzip.NewReader(f)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 	writes := map[stampKey]write{}
 	maxStart := map[string]int64{}
+	lastSeq := map[int]uint64{}
 	sc := bufio.NewScanner(zr)
 	sc.Buffer(make([]byte, 1<<20), 1<<20)
 	var base int64 = -1
 	for sc.Scan() {
 		fields := strings.Split(sc.Text(), ",")
-		if len(fields) != 8 || fields[4] != "PUT" || fields[7] != "ok" {
+		if len(fields) != 8 || fields[0] == "client" {
 			continue
 		}
 		client, _ := strconv.Atoi(fields[0])
 		seq, _ := strconv.ParseUint(fields[1], 10, 64)
+		lastSeq[client] = max(lastSeq[client], seq)
+		if fields[4] != "PUT" || fields[7] != "ok" {
+			continue
+		}
 		start, _ := strconv.ParseInt(fields[2], 10, 64)
 		lat, _ := strconv.ParseInt(fields[3], 10, 64)
 		if base < 0 {
@@ -191,12 +203,12 @@ func loadWrites(path string) (map[stampKey]write, map[string]int64, error) {
 		maxStart[w.key] = max(maxStart[w.key], w.start)
 	}
 	if err := sc.Err(); err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 	if len(writes) == 0 {
-		return nil, nil, fmt.Errorf("%s: no confirmed PUT found", path)
+		return nil, nil, nil, fmt.Errorf("%s: no confirmed PUT found", path)
 	}
-	return writes, maxStart, nil
+	return writes, maxStart, lastSeq, nil
 }
 
 func diverge(values []string) bool {
