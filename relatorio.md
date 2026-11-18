@@ -65,12 +65,12 @@ E2: 3 min sem falhas com o N de referência (16 no etcd, 8 no Redis). E4: a mesm
 | etcd | E2 | PUT | 1.655 (1.644 a 1.697) | 1,44 | 5,86 (4,51 a 6,18) | 9,56 (8,91 a 9,65) | 0 |
 | etcd | E4 | GET | 52 (51 a 52) | 298,8 | 400,7 | 401,1 | 0 |
 | etcd | E4 | PUT | 13 | 200,7 | 201,5 | 202,2 | 0 |
-| Redis | E2 | GET | (preencher) | | | | |
-| Redis | E2 | PUT | (preencher) | | | | |
-| Redis | E4 | GET | (preencher) | | | | |
-| Redis | E4 | PUT | (preencher) | | | | |
+| Redis | E2 | GET | 248.005 (232.129 a 249.504) | 0,02 | 0,03 | 0,04 (0,04 a 0,05) | 0 |
+| Redis | E2 | PUT | 61.990 (58.019 a 62.363) | 0,03 | 0,04 | 0,05 (0,05 a 0,06) | 0 |
+| Redis | E4 | GET | 254.737 (253.928 a 255.872) | 0,02 | 0,04 | 0,08 (0,07 a 0,08) | 0 |
+| Redis | E4 | PUT | 63.677 (63.473 a 63.961) | 0,02 | 0,03 | 0,04 | 0 |
 
-No etcd a vazão caiu de 8,3 mil para 65 req/s (127 vezes) com o mesmo N, e a latência passou a ser um múltiplo exato do RTT. Por nó (repetição 1): no líder (n2), PUT p50 de 100,8 ms e GET p50 de 102,8 ms; nos seguidores, PUT de 200,8 ms e GET de 300,8 ms, com p99 de GET em 401 ms. A variação entre repetições ficou abaixo de 1 ms. No Redis, (preencher: resultado; esperado: sem mudança, porque cliente e primário continuam na rede sem atraso).
+No etcd a vazão caiu de 8,3 mil para 65 req/s (127 vezes) com o mesmo N, e a latência passou a ser um múltiplo exato do RTT. Por nó (repetição 1): no líder (n2), PUT p50 de 100,8 ms e GET p50 de 102,8 ms; nos seguidores, PUT de 200,8 ms e GET de 300,8 ms, com p99 de GET em 401 ms. A variação entre repetições ficou abaixo de 1 ms. No Redis nada mudou: vazão e percentis do E4 ficaram dentro da faixa do E2 (a vazão até subiu 3%, dentro da variação entre repetições), porque o cliente fala com o primário pela rede sem atraso e a escrita é confirmada antes de qualquer mensagem às réplicas. O atraso só afetou a replicação, que não está no caminho da requisição.
 
 ## 5. E3. Stale reads
 
@@ -82,8 +82,8 @@ Coordenador: PUT(k, v) com v crescente no n1; quando o PUT retorna com sucesso, 
 |---|---|---:|---:|---:|---:|---:|---:|
 | etcd | original | 30.000 | 0 | 0,00% | 0 | 0,7 | 0,16 |
 | etcd | RTT 100 ms | 30.000 | 0 | 0,00% | 0 | 102 (n1 líder) ou 202 | 199 ou 299 |
-| Redis | original | (preencher) | | | | | |
-| Redis | RTT 100 ms | (preencher) | | | | | |
+| Redis | original | 30.000 | 1.495 | 2,60% (1,72% a 10,63%) | 1 | 0,04 | 0,03 |
+| Redis | RTT 100 ms | 30.000 | 30.000 | 100,00% | 500 | 0,03 | 0,03 |
 
 Configuração de consistência usada: no etcd, PUT confirmado pelo quórum e GET linearizável; no Redis, PUT confirmado pelo primário e GET na réplica n3 sem nível de consistência configurável.
 
@@ -98,10 +98,10 @@ Carga do E2 com cada cliente preso a um nó (16 clientes no etcd: 6 no n1 e 5 em
 |---|---|---|---|
 | etcd | 60 s de partição | GET 2.461 ok / 137 erros; PUT 646 ok / 37 erros; sem resposta em 29 dos 60 s (os ok são do primeiro segundo, antes de o nó perder o líder) | GET 370.498 ok, PUT 93.093 ok, 0 erros |
 | etcd | 60 s após a cura | GET 121.232 ok, PUT 30.182 ok, 0 a 4 erros | 0 erros |
-| Redis | 60 s de partição | (preencher) | (preencher) |
-| Redis | 60 s após a cura | (preencher) | (preencher) |
+| Redis | 60 s de partição | GET 5.818.667 ok, PUT 4.000.556 ok, 0 erros (primário isolado continua aceitando escritas) | GET 10.2 milhões ok, 0 erros (réplicas sem contato com o primário continuam lendo o estado anterior) |
+| Redis | 60 s após a cura | 0 erros | 4 a 5 erros de GET (reconexão das réplicas na ressincronização) |
 
-Convergência após a cura, três repetições: etcd, 0 chaves divergentes entre os nós, 0 escritas confirmadas perdidas, 0 valores desconhecidos (os únicos valores fora das amostras, 1 a 6 por rodada, são de requisições ainda em voo quando a carga terminou). Redis, (preencher).
+Convergência após a cura, três repetições, nos dois sistemas: 0 chaves divergentes entre os nós, 0 escritas confirmadas perdidas, 0 valores desconhecidos (os únicos valores fora das amostras, 0 a 6 por rodada, são de requisições ainda em voo quando a carga terminou). No Redis a convergência vem da ressincronização parcial: ao reconectar, cada réplica informa seu offset e o primário reenvia o trecho do fluxo de replicação que ela perdeu durante os 60 s.
 
 ## 7. E6. Falha de nó
 
@@ -116,8 +116,10 @@ Carga do E2, clientes alternando entre os três nós. Aos 60 s, `docker kill` no
 |---|---|---:|---:|---:|---:|---:|
 | etcd | líder (n2 ou n3) | 1,11 (0,87 a 1,26) | 24 (21 a 32) | 8.804 | 8.076 | 0 |
 | etcd | seguidor (n1) | 0,002 (0,001 a 0,004) | 20 | 9.056 | 8.526 | 0 |
-| Redis | primário (n1) | (preencher) | | | | |
-| Redis | réplica | (preencher) | | | | |
+| Redis | primário (n1) | 60,67 (60,63 a 60,88) | 38.097 (38.045 a 38.198) | 3.483 | 298.950 | 12 (11 a 68) |
+| Redis | réplica (n2) | 0,000 | 38 | 285.170 | 311.311 | 8 |
+
+No Redis com o primário morto não há failover: as 38 mil falhas são as escritas dos 60 s, e a primeira escrita bem-sucedida veio 0,7 s depois do `docker start` (60,67 s após o `kill`). Nos primeiros 4 s nenhum nó respondeu nada: o contêiner morto some da rede sem fechar as conexões, e cada escrita pendente esperou o timeout de 2 s; depois disso a falha passou a ser imediata (rota inexistente) e os clientes voltaram a ler nas réplicas entre uma escrita falha e outra. A vazão de leitura também caiu (3,5 mil req/s contra 299 mil) porque, em laço fechado, cada cliente gasta a maior parte do tempo na escrita que falha e na pausa de 10 ms após erro: é um efeito do gerador, não das réplicas, que responderam tudo o que receberam sem erro. Com a réplica n2 morta, as escritas não foram afetadas, as leituras passaram todas para n3 e os únicos erros foram as sondas ao nó fora.
 
 No etcd, os erros da fase de falha são as requisições que estavam no nó morto no instante do `kill` (6 a 7 por rodada, "leader changed" ou conexão fechada) e as sondas periódicas que o gerador manda ao nó fora para detectar sua volta (uma por segundo). A vazão com dois nós é igual ou maior que com três, porque os clientes passam a alternar entre dois nós vivos sem esperar timeouts. O reinício do nó não causou erro: ele volta como seguidor, recebe o log perdido do líder e passa a responder.
 
@@ -131,7 +133,7 @@ Escrita no líder, 1 RTT (100 ms): o líder anexa a proposta ao log e manda `App
 
 Leitura linearizável no líder, 1 RTT (100 ms): antes de responder, o líder confirma que ainda é líder com uma rodada de heartbeat ao quórum (ReadIndex), para não servir uma leitura obsoleta se tiver sido deposto. Leitura num seguidor, 3 RTTs (300 ms): o pedido de ReadIndex vai ao líder (50 ms), o líder faz a rodada de heartbeat (100 ms) e devolve o índice (50 ms); o seguidor ainda precisa ter aplicado o log até esse índice, e com escritas em andamento isso espera o próximo commit propagado (mais 100 ms). O p99 de 401 ms corresponde ao caso de dois commits de espera.
 
-No Redis (preencher com o resultado): a escrita é confirmada pelo primário sem esperar réplica e o cliente está na rede sem atraso, então o atraso entre nós não entra no caminho da requisição; ele só aumenta o atraso de replicação, que aparece no E3 como stale reads.
+No Redis a latência e a vazão não mudaram (GET p99 de 0,04 para 0,08 ms, PUT igual): a escrita é confirmada pelo primário sem esperar réplica e o cliente está na rede sem atraso, então o atraso entre nós não entra no caminho da requisição; ele só aumenta o atraso de replicação, que aparece no E3 como stale reads.
 
 ### 8.2 O que limitou a vazão no E1
 
@@ -145,13 +147,13 @@ No Redis, a vazão foi limitada pelo gerador e pela pilha de rede do host, não 
 
 No etcd, nenhum em 60.000 pares, com e sem atraso. É o esperado: o GET linearizável no n3 consulta o índice de commit do líder e espera o nó aplicar o log até ele, logo vê todo PUT que já retornou. O atraso de rede só muda o tempo da leitura (de 0,16 ms para 200 ou 300 ms), não o resultado. Qualquer anomalia aqui indicaria erro de configuração (por exemplo, leitura `serializable`); em teste prévio com essa opção, 19% das leituras no n3 foram stale.
 
-No Redis, (preencher: sem atraso, taxa; com atraso, taxa e atraso máximo). A escrita retorna assim que o primário a aplica; a réplica só a recebe depois do tempo de propagação, então a janela de leitura obsoleta é igual à latência entre n1 e n3 (50 ms com o `netem`). Sem atraso, na mesma máquina, a réplica aplica a escrita em dezenas de microssegundos, antes de a leitura seguinte chegar, e por isso quase nada é observado.
+No Redis, 2,6% de leituras obsoletas com a rede original (1,7% a 10,6% conforme a repetição, sempre com atraso de uma única escrita) e 100% com RTT de 100 ms, com a leitura chegando a 500 escritas confirmadas atrás (todas as escritas do coordenador). A escrita retorna assim que o primário a aplica; a réplica só a recebe depois do tempo de propagação, então a janela de leitura obsoleta é igual à latência entre n1 e n3 (50 ms com o `netem`). Sem atraso, na mesma máquina, a réplica aplica a escrita em dezenas de microssegundos, da ordem do tempo que a leitura leva para chegar, por isso só uma pequena fração das leituras é obsoleta e sempre por uma escrita; a repetição com 10,6% coincide com os 20 coordenadores simultâneos acumulando fila no fluxo de replicação.
 
 ### 8.4 Partição: escritas e leituras de cada lado, C ou A, reconciliação
 
 etcd. O lado majoritário (n2 e n3, com o líder) não percebeu a partição: 0 erros e a mesma vazão. O lado isolado (n1, um seguidor) parou de responder no primeiro segundo: sem contato com o líder, não pode confirmar escritas (não há quórum) nem servir leituras linearizáveis (o ReadIndex não chega ao líder), e cada requisição espera até o timeout de 2 s. Nenhuma escrita foi aceita no lado minoritário. O etcd prioriza C: a indisponibilidade de n1 é o preço de não responder com estado possivelmente obsoleto. Na reconciliação não há conflito: n1 reconecta como seguidor, recebe as entradas de log que perdeu e volta a responder em segundos (0 a 4 erros após a cura); a verificação não achou divergência nem escrita confirmada perdida. Se n1 fosse o líder no momento da partição, ele deporia a si mesmo ao perder os heartbeats do quórum e os outros dois elegeriam um novo líder, com o mesmo resultado para os clientes de n1.
 
-Redis. (preencher: o que foi observado). A configuração não tem failover: n1 é o primário fixo, continua aceitando escritas isolado, e as réplicas, sem contato com ele, continuam servindo leituras com o estado anterior à partição. Nenhum lado dá erro, e o sistema prioriza A: disponibilidade total, ao custo de leituras obsoletas em n2 e n3 durante 60 s. Na cura, as réplicas se ressincronizam com o primário (replicação parcial a partir do offset) e o estado converge. Não houve escritas perdidas porque só existe um nó que escreve; com failover automático (Sentinel), uma réplica poderia ser promovida durante a partição e as escritas aceitas pelo antigo primário seriam descartadas na reconciliação.
+Redis. Nenhum dos lados deu erro durante os 60 s: n1 recebeu 4,0 milhões de escritas e 5,8 milhões de leituras isolado, e as réplicas serviram 10,2 milhões de leituras. A configuração não tem failover: n1 é o primário fixo, continua aceitando escritas isolado, e as réplicas, sem contato com ele, continuam servindo leituras com o estado anterior à partição. Nenhum lado dá erro, e o sistema prioriza A: disponibilidade total, ao custo de leituras obsoletas em n2 e n3 durante 60 s. Na cura, as réplicas se ressincronizam com o primário (replicação parcial a partir do offset) e o estado converge. Não houve escritas perdidas porque só existe um nó que escreve; com failover automático (Sentinel), uma réplica poderia ser promovida durante a partição e as escritas aceitas pelo antigo primário seriam descartadas na reconciliação.
 
 ### 8.5 Tempo de failover e o que o determinou
 
@@ -159,11 +161,11 @@ etcd, líder morto: 1,11 s (0,87 a 1,26). O tempo é dominado pelo timeout de el
 
 etcd, seguidor morto: 2 ms. Não há failover: o quórum (líder mais um seguidor) continua, e o tempo medido é só o de o gerador redirecionar a requisição seguinte a outro nó.
 
-Redis, primário morto: (preencher). Sem Sentinel, não há eleição; as escritas falham até o `docker start` (60 s), e o tempo de failover é o tempo de reinício mais a reconexão do cliente. Redis, réplica morta: (preencher); as escritas vão ao primário e não são afetadas; as leituras passam à outra réplica.
+Redis, primário morto: 60,67 s, ou seja, 0,7 s depois do `docker start` aos 60 s. Sem Sentinel, não há eleição; as escritas falham até o `docker start` (60 s), e o tempo de failover é o tempo de reinício mais a reconexão do cliente. Redis, réplica morta: 0 s; as escritas vão ao primário e não são afetadas; as leituras passam à outra réplica.
 
 ### 8.6 Modelo de consistência ou implementação
 
-As diferenças de ordem de grandeza são do modelo. Três evidências: (1) no E4, a latência do etcd é um múltiplo inteiro do RTT entre nós (1, 2 ou 3 RTTs conforme o papel do nó e a operação), o que é a contagem de rodadas de mensagens do protocolo, independente de código; o Redis não muda, porque seu caminho de requisição não cruza a rede entre nós. (2) No E3, 0 stale reads no etcd em qualquer condição e (preencher: Redis) no Redis, que é a definição dos dois modelos: linearizável contra eventual. (3) No E5, um lado do etcd para e nenhum lado do Redis para, que é a escolha C contra A que o modelo impõe a qualquer implementação com a mesma semântica. Esses três resultados se repetiriam com Consul ou Zookeeper de um lado e Cassandra com CL=ONE do outro.
+As diferenças de ordem de grandeza são do modelo. Três evidências: (1) no E4, a latência do etcd é um múltiplo inteiro do RTT entre nós (1, 2 ou 3 RTTs conforme o papel do nó e a operação), o que é a contagem de rodadas de mensagens do protocolo, independente de código; o Redis não muda, porque seu caminho de requisição não cruza a rede entre nós. (2) No E3, 0 stale reads no etcd em qualquer condição e 2,6% a 100% no Redis conforme a distância entre os nós, que é a definição dos dois modelos: linearizável contra eventual. (3) No E5, um lado do etcd para e nenhum lado do Redis para, que é a escolha C contra A que o modelo impõe a qualquer implementação com a mesma semântica. Esses três resultados se repetiriam com Consul ou Zookeeper de um lado e Cassandra com CL=ONE do outro.
 
 Os valores absolutos são da implementação e do ambiente. No etcd: o `fsync` a cada commit (durabilidade além do que o consenso exige), o agrupamento de propostas que faz a vazão crescer com N, o timeout de eleição de 1 s que fixa o failover, o ReadIndex que amarra as leituras ao apply. No Redis: o servidor single-thread, o protocolo de texto leve, e a ausência de failover na configuração usada, que é uma escolha de topologia e não do modelo (com Sentinel o E6 teria uma eleição e o E5 poderia perder escritas). No ambiente: os dois clusters rodam na mesma máquina, sem latência real entre nós, o que faz o custo do consenso parecer pequeno em valor absoluto no E2 (p99 de 10 ms) e só aparecer com clareza no E4; e o platô do Redis é o do gerador, não do banco.
 
