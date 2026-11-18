@@ -376,3 +376,11 @@ func (r *Result) WriteSamplesCSV(w io.Writer) error {
 	}
 	return werr
 }
+
+// LatencyOf summarizes latencies given in nanoseconds. The slice is sorted
+// in place.
+func LatencyOf(lats []uint32) *Latency {
+	o := OpSummary{lats: lats}
+	o.finish(0)
+	return o.Latency
+}

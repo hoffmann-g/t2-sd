@@ -335,9 +335,9 @@ func TestTimelineBinsByCompletion(t *testing.T) {
 	add := func(start, lat time.Duration, node int, op Op, st Status) {
 		res.recs[0].add(newSample(start, lat, 0, node, op, st))
 	}
-	add(100*time.Millisecond, 10*time.Millisecond, 0, Get, OK)   // second 0 (warm-up)
-	add(900*time.Millisecond, 200*time.Millisecond, 1, Put, OK)  // starts in 0, completes in 1
-	add(1500*time.Millisecond, 20*time.Millisecond, 1, Get, OK)  // second 1
+	add(100*time.Millisecond, 10*time.Millisecond, 0, Get, OK)  // second 0 (warm-up)
+	add(900*time.Millisecond, 200*time.Millisecond, 1, Put, OK) // starts in 0, completes in 1
+	add(1500*time.Millisecond, 20*time.Millisecond, 1, Get, OK) // second 1
 	add(2100*time.Millisecond, 50*time.Millisecond, 2, Get, Failed)
 	add(2200*time.Millisecond, 500*time.Millisecond, 2, Put, Timeout)
 
