@@ -41,6 +41,14 @@ require_system() {
 cluster_ip() { echo "$LAB_NET_CLUSTER.1${1#n}"; }
 client_ip() { echo "$LAB_NET_CLIENTS.1${1#n}"; }
 
+# Client port of the running system.
+client_port() {
+  case $(running_system) in
+    etcd) echo 2379 ;;
+    redis) echo 6379 ;;
+  esac
+}
+
 # Regular expression that matches an address of the cluster network.
 cluster_regex() { echo "^${LAB_NET_CLUSTER//./\\.}\\."; }
 

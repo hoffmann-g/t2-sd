@@ -6,7 +6,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY cmd ./cmd
 COPY internal ./internal
-RUN CGO_ENABLED=0 go build -trimpath -o /out/ ./cmd/loadgen ./cmd/stale
+RUN CGO_ENABLED=0 go build -trimpath -o /out/ ./cmd/loadgen ./cmd/stale ./cmd/check
 
 FROM alpine:3.22
 COPY --from=build /out/ /usr/local/bin/
