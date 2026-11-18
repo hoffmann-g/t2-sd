@@ -17,10 +17,10 @@ Done:
 - stale-read coordinator of E3 (`cmd/stale`);
 - convergence check for E5 (`cmd/check`);
 - Compose files, fault scripts and the scripts of E1 to E6 (`lab/`);
-- analysis of E1 (`cmd/analyze e1`);
+- analysis of every experiment (`cmd/analyze`) and the figures (`plots/`);
 - web visualization (`cmd/viz`).
 
-Not done: the measurements themselves (nothing under `results/` is final), the analysis of E2 to E6, the plots and the report.
+Not done: the measurements themselves (nothing under `results/` is final) and the report.
 
 ## Layout
 
@@ -28,7 +28,9 @@ Not done: the measurements themselves (nothing under `results/` is final), the a
 cmd/loadgen        load generator (runs inside the gerador container)
 cmd/stale          E3 coordinator: PUT on one node, GET on another, counts stale reads
 cmd/check          E5: compares the nodes with the confirmed writes after the partition
-cmd/analyze        combines the repetitions of an experiment into tables
+cmd/analyze        combines the repetitions of an experiment into tables (Markdown and CSV)
+plots/             figures of the report, from the CSV files of analyze (Python, uv)
+figures/           output of plots/
 cmd/viz            web page that drives a live execution (cluster, load, faults)
 internal/kv        key-value interface and the etcd and Redis adapters
 internal/load      closed loop, samples, statistics
@@ -79,6 +81,7 @@ Each script starts from a clean cluster for every repetition, records the CPU of
 lab/scripts/e1.sh etcd          # saturation: N = 1, 2, 4, ..., 512, 2 min each, 3 reps
 lab/scripts/e1.sh redis
 go run ./cmd/analyze e1         # table with median and range, knee and plateau; writes results/e1/e1.csv
+go run ./cmd/analyze all        # every experiment that has results; tables as Markdown and CSV
 
 lab/scripts/e2.sh etcd 32       # baseline with the optimal N of E1, 3 min
 lab/scripts/e3.sh etcd          # stale reads, 10,000 pairs, normal network and 50 ms delay
@@ -100,6 +103,14 @@ docker kill n2; docker start n2
 ```
 
 E1 alone takes about 70 minutes per system. Run the experiments on mains power, with the CPU governor on `performance` and nothing else heavy on the machine.
+
+## Figures
+
+```sh
+cd plots && uv run plots        # writes figures/*.png from the CSV files of cmd/analyze
+```
+
+`plots/` is a small Python project (matplotlib, pandas) managed with `uv`. It draws the saturation curve of E1, the percentiles of E2 and E4 side by side, the stale-read rate of E3 and, for E5 and E6, the successful requests per second by node and the errors per second, aligned on the instant of the fault, one panel per repetition.
 
 ## Visualization
 
