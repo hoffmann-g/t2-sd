@@ -55,7 +55,7 @@ h2 { font-size: 13px; margin: 0 0 8px; font-weight: 600; color: var(--ink-2); te
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px; min-width: 0; }
 .row { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; }
 .field { display: grid; gap: 2px; }
-.field span { font-size: 12px; color: var(--ink-2); }
+.field span { font-size: 12px; color: var(--ink-2); cursor: help; border-bottom: 1px dotted var(--border); }
 .field input, .field select { font: inherit; color: var(--ink); background: var(--page);
   border: 1px solid var(--border); border-radius: 6px; padding: 4px 6px; width: 90px; }
 .field select { width: 130px; }
@@ -114,10 +114,10 @@ canvas { display: block; width: 100%; }
 <section class="card">
   <h2>Cluster</h2>
   <div class="row">
-    <label class="field"><span>System</span>
+    <label class="field" title="etcd: Raft, writes committed by a quorum with fsync, linearizable reads. Redis: one primary and two asynchronous replicas."><span>System</span>
       <select id="system"><option value="etcd">etcd (Raft)</option><option value="redis">Redis (async replicas)</option></select></label>
-    <button class="primary" id="btnUp">Start clean cluster</button>
-    <button id="btnDown">Stop cluster</button>
+    <button class="primary" id="btnUp" title="Removes any lab cluster and its data, starts three nodes and the generator, waits until ready (15 to 20 s).">Start clean cluster</button>
+    <button id="btnDown" title="Stops the cluster and deletes its data.">Stop cluster</button>
     <span class="hint">Starting removes any cluster and its data, builds the generator image and waits until the nodes are ready.</span>
   </div>
 </section>
@@ -125,36 +125,36 @@ canvas { display: block; width: 100%; }
 <section class="card">
   <h2>Load</h2>
   <div class="row">
-    <label class="field"><span>Clients (N)</span><input id="threads" type="number" min="1" max="4096" value="16"></label>
-    <label class="field"><span>Duration (s)</span><input id="duration" type="number" min="2" value="60"></label>
-    <label class="field"><span>Warm-up (s)</span><input id="warmup" type="number" min="0" value="5"></label>
-    <label class="field"><span>PUT ratio</span><input id="put" type="number" min="0" max="1" step="0.05" value="0.2"></label>
-    <label class="field"><span>Reads</span><select id="read"></select></label>
-    <label class="field"><span>Routing</span><label class="chk"><input id="pinned" type="checkbox"> pinned to one node</label></label>
-    <button class="primary" id="btnLoad">Start load</button>
+    <label class="field" title="Concurrent clients of the generator, each in closed loop (send, wait, send again). Sets the load intensity. Reference: 16 for etcd, 8 for Redis."><span>Clients (N)</span><input id="threads" type="number" min="1" max="4096" value="16"></label>
+    <label class="field" title="Length of the run, warm-up included. The E2 of the report uses 180 s."><span>Duration (s)</span><input id="duration" type="number" min="2" value="60"></label>
+    <label class="field" title="Initial seconds left out of the statistics (shaded grey in the charts). The report uses 30 s."><span>Warm-up (s)</span><input id="warmup" type="number" min="0" value="5"></label>
+    <label class="field" title="Fraction of requests that are writes. 0.2 is the 80% GET / 20% PUT mix of the assignment."><span>PUT ratio</span><input id="put" type="number" min="0" max="1" step="0.05" value="0.2"></label>
+    <label class="field" title="etcd: linearizable goes through the leader (ReadIndex); serializable reads the local state and may be stale. Redis: which nodes receive the reads."><span>Reads</span><select id="read"></select></label>
+    <label class="field" title="Unchecked: each client rotates over the nodes it can use and skips a failed node for one second. Checked: client i always uses node i mod 3, as in E5."><span>Routing</span><label class="chk"><input id="pinned" type="checkbox"> pinned to one node</label></label>
+    <button class="primary" id="btnLoad" title="Runs loadgen inside the generator container with the fields on the left; one line per second feeds the charts.">Start load</button>
     <div class="sep"></div>
-    <label class="field"><span>Pairs</span><input id="pairs" type="number" min="1" value="10000"></label>
-    <label class="field"><span>PUT on</span><select id="wnode"><option>1</option><option>2</option><option>3</option></select></label>
-    <label class="field"><span>GET on</span><select id="rnode"><option>1</option><option>2</option><option selected>3</option></select></label>
-    <button class="primary" id="btnStale">Start stale reads</button>
+    <label class="field" title="PUT then GET pairs of the stale-read coordinator (E3 uses 10,000)."><span>Pairs</span><input id="pairs" type="number" min="1" value="10000"></label>
+    <label class="field" title="Node that receives the PUT of each pair. In Redis writes always go to the primary."><span>PUT on</span><select id="wnode"><option>1</option><option>2</option><option>3</option></select></label>
+    <label class="field" title="Node that receives the GET of each pair, sent only after the PUT returned."><span>GET on</span><select id="rnode"><option>1</option><option>2</option><option selected>3</option></select></label>
+    <button class="primary" id="btnStale" title="Runs the E3 coordinator: PUT with an increasing value, then GET on the other node; counts reads older than the last confirmed write.">Start stale reads</button>
     <div class="sep"></div>
-    <button class="danger" id="btnStop">Stop tool</button>
+    <button class="danger" id="btnStop" title="Interrupts the running tool (SIGINT inside the container); loadgen still prints its summary in the log.">Stop tool</button>
   </div>
 </section>
 
 <section class="card">
   <h2>Faults</h2>
   <div class="row">
-    <label class="field"><span>Delay per direction</span><input id="delay" value="50ms"></label>
-    <button data-fault="latency">Add delay between nodes</button>
-    <button data-fault="nolatency">Remove delay</button>
+    <label class="field" title="tc netem delay applied on the cluster-network interface of each node, like 50ms. 50 ms on both nodes of a pair gives an RTT of 100 ms. Generator traffic is not affected."><span>Delay per direction</span><input id="delay" value="50ms"></label>
+    <button data-fault="latency" title="Applies the delay on n1, n2 and n3 (E4). Takes a few seconds, one helper container per node.">Add delay between nodes</button>
+    <button data-fault="nolatency" title="Removes the delay from every node.">Remove delay</button>
     <div class="sep"></div>
-    <button data-fault="partition">Partition n1</button>
-    <button data-fault="heal">Heal partition</button>
+    <button data-fault="partition" title="docker network disconnect: n1 loses the cluster network but stays reachable by the clients (E5).">Partition n1</button>
+    <button data-fault="heal" title="Reconnects n1 to the cluster network with the same address.">Heal partition</button>
     <div class="sep"></div>
-    <label class="field"><span>Node</span><select id="fnode"><option>n1</option><option>n2</option><option>n3</option></select></label>
-    <button data-fault="kill">docker kill</button>
-    <button data-fault="start">docker start</button>
+    <label class="field" title="Target of docker kill and docker start. Kill the leader or primary for E6 (a), another node for E6 (b)."><span>Node</span><select id="fnode"><option>n1</option><option>n2</option><option>n3</option></select></label>
+    <button data-fault="kill" title="Stops the selected node abruptly (E6).">docker kill</button>
+    <button data-fault="start" title="Restarts the selected node; it rejoins as follower or replica.">docker start</button>
   </div>
 </section>
 
