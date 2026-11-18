@@ -92,7 +92,16 @@ Configuração de consistência usada: no etcd, PUT confirmado pelo quórum e GE
 ![E5 etcd](figures/e5-etcd.png)
 ![E5 Redis](figures/e5-redis.png)
 
-(preencher: tabela por lado; verificação de convergência)
+Carga do E2 com cada cliente preso a um nó (16 clientes no etcd: 6 no n1 e 5 em cada outro; 8 no Redis: 3 no n1, 3 no n2, 2 no n3). Aos 60 s, `docker network disconnect` tira o n1 da rede entre nós (ele continua na rede dos clientes); aos 120 s o n1 é reconectado; a carga vai até 180 s. Antes de cada medição foi verificado que n2 alcança n3, n1 não alcança n2 e o gerador alcança n1. Depois da carga, `check` lê todas as chaves em todos os nós e compara com as escritas confirmadas da rodada. Nas três repetições do etcd, o líder era n3, e n1 um seguidor. As figuras mostram as requisições atendidas por segundo por nó e os erros por segundo; a tabela traz os totais por fase (mediana das repetições).
+
+| sistema | fase | n1 (isolado) | n2 e n3 |
+|---|---|---|---|
+| etcd | 60 s de partição | GET 2.461 ok / 137 erros; PUT 646 ok / 37 erros; sem resposta em 29 dos 60 s (os ok são do primeiro segundo, antes de o nó perder o líder) | GET 370.498 ok, PUT 93.093 ok, 0 erros |
+| etcd | 60 s após a cura | GET 121.232 ok, PUT 30.182 ok, 0 a 4 erros | 0 erros |
+| Redis | 60 s de partição | (preencher) | (preencher) |
+| Redis | 60 s após a cura | (preencher) | (preencher) |
+
+Convergência após a cura, três repetições: etcd, 0 chaves divergentes entre os nós, 0 escritas confirmadas perdidas, 0 valores desconhecidos (os únicos valores fora das amostras, 1 a 6 por rodada, são de requisições ainda em voo quando a carga terminou). Redis, (preencher).
 
 ## 7. E6. Falha de nó
 
@@ -101,7 +110,16 @@ Configuração de consistência usada: no etcd, PUT confirmado pelo quórum e GE
 ![E6 Redis primário](figures/e6-redis-leader.png)
 ![E6 Redis réplica](figures/e6-redis-follower.png)
 
-(preencher: tabela de failover)
+Carga do E2, clientes alternando entre os três nós. Aos 60 s, `docker kill` no nó escolhido; aos 120 s, `docker start`; carga até 180 s. Variante (a): o líder do etcd (identificado antes de matar) ou o primário do Redis (n1). Variante (b): um seguidor ou uma réplica. Tempo de failover: do `kill` até a conclusão da primeira escrita enviada depois dele que teve sucesso, medido nas amostras.
+
+| sistema | nó morto | failover de escrita (s) | erros nos 60 s de falha | req/s na falha | req/s antes | erros nos 60 s após reinício |
+|---|---|---:|---:|---:|---:|---:|
+| etcd | líder (n2 ou n3) | 1,11 (0,87 a 1,26) | 24 (21 a 32) | 8.804 | 8.076 | 0 |
+| etcd | seguidor (n1) | 0,002 (0,001 a 0,004) | 20 | 9.056 | 8.526 | 0 |
+| Redis | primário (n1) | (preencher) | | | | |
+| Redis | réplica | (preencher) | | | | |
+
+No etcd, os erros da fase de falha são as requisições que estavam no nó morto no instante do `kill` (6 a 7 por rodada, "leader changed" ou conexão fechada) e as sondas periódicas que o gerador manda ao nó fora para detectar sua volta (uma por segundo). A vazão com dois nós é igual ou maior que com três, porque os clientes passam a alternar entre dois nós vivos sem esperar timeouts. O reinício do nó não causou erro: ele volta como seguidor, recebe o log perdido do líder e passa a responder.
 
 ## 8. Perguntas
 
@@ -131,11 +149,17 @@ No Redis, (preencher: sem atraso, taxa; com atraso, taxa e atraso máximo). A es
 
 ### 8.4 Partição: escritas e leituras de cada lado, C ou A, reconciliação
 
-(preencher)
+etcd. O lado majoritário (n2 e n3, com o líder) não percebeu a partição: 0 erros e a mesma vazão. O lado isolado (n1, um seguidor) parou de responder no primeiro segundo: sem contato com o líder, não pode confirmar escritas (não há quórum) nem servir leituras linearizáveis (o ReadIndex não chega ao líder), e cada requisição espera até o timeout de 2 s. Nenhuma escrita foi aceita no lado minoritário. O etcd prioriza C: a indisponibilidade de n1 é o preço de não responder com estado possivelmente obsoleto. Na reconciliação não há conflito: n1 reconecta como seguidor, recebe as entradas de log que perdeu e volta a responder em segundos (0 a 4 erros após a cura); a verificação não achou divergência nem escrita confirmada perdida. Se n1 fosse o líder no momento da partição, ele deporia a si mesmo ao perder os heartbeats do quórum e os outros dois elegeriam um novo líder, com o mesmo resultado para os clientes de n1.
+
+Redis. (preencher: o que foi observado). A configuração não tem failover: n1 é o primário fixo, continua aceitando escritas isolado, e as réplicas, sem contato com ele, continuam servindo leituras com o estado anterior à partição. Nenhum lado dá erro, e o sistema prioriza A: disponibilidade total, ao custo de leituras obsoletas em n2 e n3 durante 60 s. Na cura, as réplicas se ressincronizam com o primário (replicação parcial a partir do offset) e o estado converge. Não houve escritas perdidas porque só existe um nó que escreve; com failover automático (Sentinel), uma réplica poderia ser promovida durante a partição e as escritas aceitas pelo antigo primário seriam descartadas na reconciliação.
 
 ### 8.5 Tempo de failover e o que o determinou
 
-(preencher)
+etcd, líder morto: 1,11 s (0,87 a 1,26). O tempo é dominado pelo timeout de eleição do Raft, 1.000 ms por padrão no etcd (com heartbeat de 100 ms): um seguidor só se candidata depois de passar esse intervalo sem heartbeat, e a eleição em si (um RTT de rede local) e a notificação ao cliente somam poucos milissegundos. A detecção de falha é por ausência de heartbeat, como o detector de defeitos eventualmente perfeito que sustenta o consenso no modelo fail-noisy (CGR §2.6 e §5.3): o timeout tem que ser maior que o atraso normal entre nós, sob pena de eleições espúrias, e por isso fica na casa do segundo. Os clientes não precisaram de reconfiguração: como o gerador conhece os três endereços e qualquer nó aceita escritas, a primeira escrita bem-sucedida foi em outro nó.
+
+etcd, seguidor morto: 2 ms. Não há failover: o quórum (líder mais um seguidor) continua, e o tempo medido é só o de o gerador redirecionar a requisição seguinte a outro nó.
+
+Redis, primário morto: (preencher). Sem Sentinel, não há eleição; as escritas falham até o `docker start` (60 s), e o tempo de failover é o tempo de reinício mais a reconexão do cliente. Redis, réplica morta: (preencher); as escritas vão ao primário e não são afetadas; as leituras passam à outra réplica.
 
 ### 8.6 Modelo de consistência ou implementação
 
