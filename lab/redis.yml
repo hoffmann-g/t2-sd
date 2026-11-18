@@ -1,0 +1,75 @@
+# Redis with asynchronous replicas (n1 primary, n2 and n3 replicas) and the
+# load generator.
+#
+# Based on the file of the lab handout (enunciado/lab-compose/lab/redis.yml).
+# Changes: subnets, image and CPU sets come from .env, and the generator
+# container runs the Go tools of this project instead of a Python image.
+#
+# Replication uses the cluster network, so it is subject to the delay and the
+# partition of the experiments. Persistence is off (no RDB, no AOF).
+name: lab-redis
+
+x-redis: &redis
+  image: ${REDIS_IMAGE}
+
+services:
+  n1:
+    <<: *redis
+    container_name: n1
+    cpuset: "${LAB_CPUS_N1}"
+    command: ["redis-server", "--bind", "0.0.0.0", "--protected-mode", "no", "--save", "", "--appendonly", "no"]
+    networks:
+      cluster:
+        ipv4_address: ${LAB_NET_CLUSTER}.11
+      clientes:
+        ipv4_address: ${LAB_NET_CLIENTS}.11
+
+  n2:
+    <<: *redis
+    container_name: n2
+    cpuset: "${LAB_CPUS_N2}"
+    command: ["redis-server", "--bind", "0.0.0.0", "--protected-mode", "no", "--save", "", "--appendonly", "no", "--replicaof", "${LAB_NET_CLUSTER}.11", "6379"]
+    networks:
+      cluster:
+        ipv4_address: ${LAB_NET_CLUSTER}.12
+      clientes:
+        ipv4_address: ${LAB_NET_CLIENTS}.12
+
+  n3:
+    <<: *redis
+    container_name: n3
+    cpuset: "${LAB_CPUS_N3}"
+    command: ["redis-server", "--bind", "0.0.0.0", "--protected-mode", "no", "--save", "", "--appendonly", "no", "--replicaof", "${LAB_NET_CLUSTER}.11", "6379"]
+    networks:
+      cluster:
+        ipv4_address: ${LAB_NET_CLUSTER}.13
+      clientes:
+        ipv4_address: ${LAB_NET_CLIENTS}.13
+
+  gerador:
+    build:
+      context: ..
+    image: lab-gerador
+    container_name: gerador
+    cpuset: "${LAB_CPUS_GEN}"
+    user: "${LAB_UID}:${LAB_GID}"
+    environment:
+      LAB_SYSTEM: redis
+      LAB_NODES: ${LAB_NET_CLIENTS}.11,${LAB_NET_CLIENTS}.12,${LAB_NET_CLIENTS}.13
+    volumes:
+      - ../results:/results
+    networks:
+      clientes:
+        ipv4_address: ${LAB_NET_CLIENTS}.100
+
+networks:
+  cluster:
+    name: lab_cluster
+    ipam:
+      config:
+        - subnet: ${LAB_NET_CLUSTER}.0/24
+  clientes:
+    name: lab_clientes
+    ipam:
+      config:
+        - subnet: ${LAB_NET_CLIENTS}.0/24

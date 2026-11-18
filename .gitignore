@@ -1,0 +1,12 @@
+# raw samples of every request (large); summaries and timelines are kept
+samples.csv.gz
+
+# binaries
+/loadgen
+/analyze
+/viz
+*.exe
+
+# OS files
+.DS_Store
+__MACOSX/

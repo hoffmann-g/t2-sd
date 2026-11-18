@@ -1,0 +1,91 @@
+# etcd cluster (3 nodes, Raft) and the load generator.
+#
+# Based on the file of the lab handout (enunciado/lab-compose/lab/etcd.yml).
+# Changes: subnets, image and CPU sets come from .env, and the generator
+# container runs the Go tools of this project instead of a Python image.
+#
+# Peer traffic (port 2380) uses the cluster network; clients use port 2379 on
+# the client network.
+name: lab-etcd
+
+x-etcd: &etcd
+  image: ${ETCD_IMAGE}
+  environment: &etcd-env
+    ETCD_DATA_DIR: /data
+    ETCD_LISTEN_PEER_URLS: http://0.0.0.0:2380
+    ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
+    ETCD_INITIAL_CLUSTER_TOKEN: lab
+    ETCD_INITIAL_CLUSTER_STATE: new
+    ETCD_INITIAL_CLUSTER: n1=http://${LAB_NET_CLUSTER}.11:2380,n2=http://${LAB_NET_CLUSTER}.12:2380,n3=http://${LAB_NET_CLUSTER}.13:2380
+
+services:
+  n1:
+    <<: *etcd
+    container_name: n1
+    cpuset: "${LAB_CPUS_N1}"
+    environment:
+      <<: *etcd-env
+      ETCD_NAME: n1
+      ETCD_INITIAL_ADVERTISE_PEER_URLS: http://${LAB_NET_CLUSTER}.11:2380
+      ETCD_ADVERTISE_CLIENT_URLS: http://${LAB_NET_CLIENTS}.11:2379
+    networks:
+      cluster:
+        ipv4_address: ${LAB_NET_CLUSTER}.11
+      clientes:
+        ipv4_address: ${LAB_NET_CLIENTS}.11
+  n2:
+    <<: *etcd
+    container_name: n2
+    cpuset: "${LAB_CPUS_N2}"
+    environment:
+      <<: *etcd-env
+      ETCD_NAME: n2
+      ETCD_INITIAL_ADVERTISE_PEER_URLS: http://${LAB_NET_CLUSTER}.12:2380
+      ETCD_ADVERTISE_CLIENT_URLS: http://${LAB_NET_CLIENTS}.12:2379
+    networks:
+      cluster:
+        ipv4_address: ${LAB_NET_CLUSTER}.12
+      clientes:
+        ipv4_address: ${LAB_NET_CLIENTS}.12
+  n3:
+    <<: *etcd
+    container_name: n3
+    cpuset: "${LAB_CPUS_N3}"
+    environment:
+      <<: *etcd-env
+      ETCD_NAME: n3
+      ETCD_INITIAL_ADVERTISE_PEER_URLS: http://${LAB_NET_CLUSTER}.13:2380
+      ETCD_ADVERTISE_CLIENT_URLS: http://${LAB_NET_CLIENTS}.13:2379
+    networks:
+      cluster:
+        ipv4_address: ${LAB_NET_CLUSTER}.13
+      clientes:
+        ipv4_address: ${LAB_NET_CLIENTS}.13
+
+  gerador:
+    build:
+      context: ..
+    image: lab-gerador
+    container_name: gerador
+    cpuset: "${LAB_CPUS_GEN}"
+    user: "${LAB_UID}:${LAB_GID}"
+    environment:
+      LAB_SYSTEM: etcd
+      LAB_NODES: ${LAB_NET_CLIENTS}.11,${LAB_NET_CLIENTS}.12,${LAB_NET_CLIENTS}.13
+    volumes:
+      - ../results:/results
+    networks:
+      clientes:
+        ipv4_address: ${LAB_NET_CLIENTS}.100
+
+networks:
+  cluster:
+    name: lab_cluster
+    ipam:
+      config:
+        - subnet: ${LAB_NET_CLUSTER}.0/24
+  clientes:
+    name: lab_clientes
+    ipam:
+      config:
+        - subnet: ${LAB_NET_CLIENTS}.0/24
