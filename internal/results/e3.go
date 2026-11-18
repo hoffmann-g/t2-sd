@@ -63,45 +63,72 @@ func LoadE3(resultsDir string) ([]StaleResult, error) {
 	var out []StaleResult
 	for _, system := range systems {
 		for _, cond := range []string{"normal", "delay"} {
-			dirs, err := repDirs(filepath.Join(resultsDir, "e3", system, cond), "summary.json")
+			// A repetition is split among coordinators: rep<r>/c<k>/summary.json.
+			// A repetition with a single coordinator (rep<r>/summary.json) is
+			// also accepted.
+			repDir := filepath.Join(resultsDir, "e3", system, cond)
+			reps, err := repDirs(repDir, "done")
 			if err != nil {
 				return nil, err
 			}
-			if len(dirs) == 0 {
+			seen := map[string]bool{}
+			for _, d := range reps {
+				seen[d] = true
+			}
+			if single, _ := repDirs(repDir, "summary.json"); len(single) > 0 {
+				for _, d := range single {
+					if !seen[d] {
+						reps = append(reps, d)
+					}
+				}
+			}
+			if len(reps) == 0 {
 				continue
 			}
-			r := StaleResult{System: system, Condition: cond, Reps: len(dirs)}
+			r := StaleResult{System: system, Condition: cond, Reps: len(reps)}
 			var rate, p50, p99, g50, g99 []float64
-			for _, d := range dirs {
-				b, err := os.ReadFile(filepath.Join(d, "summary.json"))
-				if err != nil {
-					return nil, err
+			for _, rep := range reps {
+				files, _ := filepath.Glob(filepath.Join(rep, "c*", "summary.json"))
+				if _, err := os.Stat(filepath.Join(rep, "summary.json")); err == nil {
+					files = append(files, filepath.Join(rep, "summary.json"))
 				}
-				var s staleSummary
-				if err := json.Unmarshal(b, &s); err != nil {
-					return nil, fmt.Errorf("%s: %w", d, err)
+				var repStale, repGets, repPairs int
+				for _, f := range files {
+					b, err := os.ReadFile(f)
+					if err != nil {
+						return nil, err
+					}
+					var s staleSummary
+					if err := json.Unmarshal(b, &s); err != nil {
+						return nil, fmt.Errorf("%s: %w", f, err)
+					}
+					r.Read = s.Read
+					r.Nodes = fmt.Sprintf("PUT %s, GET %s", s.WriteNode, s.ReadNode)
+					repPairs += s.Pairs
+					repStale += s.Stale
+					repGets += s.GetOK
+					r.MaxLag = max(r.MaxLag, s.MaxLag)
+					r.PutErrors += s.PutFailed
+					r.GetErrors += s.GetFailed
+					if s.PutLat != nil {
+						p50, p99 = append(p50, s.PutLat.P50), append(p99, s.PutLat.P99)
+					}
+					if s.GetLat != nil {
+						g50, g99 = append(g50, s.GetLat.P50), append(g99, s.GetLat.P99)
+					}
 				}
-				r.Read = s.Read
-				r.Nodes = fmt.Sprintf("PUT %s, GET %s", s.WriteNode, s.ReadNode)
-				r.Pairs = s.Pairs
-				r.Stale += s.Stale
-				r.Gets += s.GetOK
-				r.MaxLag = max(r.MaxLag, s.MaxLag)
-				r.PutErrors += s.PutFailed
-				r.GetErrors += s.GetFailed
-				rate = append(rate, s.StaleRate)
-				if s.PutLat != nil {
-					p50, p99 = append(p50, s.PutLat.P50), append(p99, s.PutLat.P99)
+				r.Pairs = repPairs
+				r.Stale += repStale
+				r.Gets += repGets
+				if repGets > 0 {
+					rate = append(rate, float64(repStale)/float64(repGets))
 				}
-				if s.GetLat != nil {
-					g50, g99 = append(g50, s.GetLat.P50), append(g99, s.GetLat.P99)
+				if rtt, err := os.ReadFile(filepath.Join(rep, "rtt.txt")); err == nil {
+					r.RTT = lastLine(string(rtt))
 				}
 			}
 			r.StaleRate = newStat(rate)
 			r.PutP50, r.PutP99, r.GetP50, r.GetP99 = newStat(p50), newStat(p99), newStat(g50), newStat(g99)
-			if rtt, err := os.ReadFile(filepath.Join(dirs[0], "rtt.txt")); err == nil {
-				r.RTT = lastLine(string(rtt))
-			}
 			out = append(out, r)
 		}
 	}
