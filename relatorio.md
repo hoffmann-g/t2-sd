@@ -163,7 +163,9 @@ Redis, primário morto: (preencher). Sem Sentinel, não há eleição; as escrit
 
 ### 8.6 Modelo de consistência ou implementação
 
-(preencher)
+As diferenças de ordem de grandeza são do modelo. Três evidências: (1) no E4, a latência do etcd é um múltiplo inteiro do RTT entre nós (1, 2 ou 3 RTTs conforme o papel do nó e a operação), o que é a contagem de rodadas de mensagens do protocolo, independente de código; o Redis não muda, porque seu caminho de requisição não cruza a rede entre nós. (2) No E3, 0 stale reads no etcd em qualquer condição e (preencher: Redis) no Redis, que é a definição dos dois modelos: linearizável contra eventual. (3) No E5, um lado do etcd para e nenhum lado do Redis para, que é a escolha C contra A que o modelo impõe a qualquer implementação com a mesma semântica. Esses três resultados se repetiriam com Consul ou Zookeeper de um lado e Cassandra com CL=ONE do outro.
+
+Os valores absolutos são da implementação e do ambiente. No etcd: o `fsync` a cada commit (durabilidade além do que o consenso exige), o agrupamento de propostas que faz a vazão crescer com N, o timeout de eleição de 1 s que fixa o failover, o ReadIndex que amarra as leituras ao apply. No Redis: o servidor single-thread, o protocolo de texto leve, e a ausência de failover na configuração usada, que é uma escolha de topologia e não do modelo (com Sentinel o E6 teria uma eleição e o E5 poderia perder escritas). No ambiente: os dois clusters rodam na mesma máquina, sem latência real entre nós, o que faz o custo do consenso parecer pequeno em valor absoluto no E2 (p99 de 10 ms) e só aparecer com clareza no E4; e o platô do Redis é o do gerador, não do banco.
 
 ## 9. Reprodução
 
