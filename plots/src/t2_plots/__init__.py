@@ -85,7 +85,7 @@ def e1(results: Path, out: Path) -> list[Path]:
         if len(opt):
             ax.plot(opt.throughput_median, opt.p99_ms_median, "o", ms=11, mfc="none", mec=c, mew=1.5)
             ax.annotate("optimal", (opt.throughput_median.iloc[0], opt.p99_ms_median.iloc[0]),
-                        textcoords="offset points", xytext=(8, 8), fontsize=7, color=c)
+                        textcoords="offset points", xytext=(-9, 9), ha="right", fontsize=7, color=c)
         plateau = g[g.plateau]
         if len(plateau) >= 2:
             ax.axvline(plateau.throughput_median.max(), color=c, lw=0.6, ls=":", alpha=0.7)
