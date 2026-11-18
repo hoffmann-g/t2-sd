@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Replicated KV Lab</title>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.10);
+  --wash: rgba(11, 11, 11, 0.04);
+  --n1: #2a78d6;
+  --n2: #1baf7a;
+  --n3: #8a5cd6;
+  --get: #2a78d6;
+  --put: #eb6834;
+  --err: #d03b3b;
+  --stale: #eda100;
+  --event: #4a3aa7;
+  --good: #006300;
+  --warm: rgba(11, 11, 11, 0.06);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #8d8c86;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10); --wash: rgba(255,255,255,0.05);
+    --n1: #3987e5; --n2: #199e70; --n3: #9b7ae6; --get: #3987e5; --put: #d95926; --err: #e04c4c;
+    --stale: #c98500; --event: #9085e9; --good: #0ca30c; --warm: rgba(255,255,255,0.07);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #8d8c86;
+  --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10); --wash: rgba(255,255,255,0.05);
+  --n1: #3987e5; --n2: #199e70; --n3: #9b7ae6; --get: #3987e5; --put: #d95926; --err: #e04c4c;
+  --stale: #c98500; --event: #9085e9; --good: #0ca30c; --warm: rgba(255,255,255,0.07);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink);
+  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+main { max-width: 1400px; margin: 0 auto; padding: 16px; display: grid; gap: 12px; }
+header { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+h1 { font-size: 18px; margin: 0; font-weight: 600; }
+h2 { font-size: 13px; margin: 0 0 8px; font-weight: 600; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.04em; }
+.status { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.status b { color: var(--ink); font-weight: 600; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px; min-width: 0; }
+.row { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; }
+.field { display: grid; gap: 2px; }
+.field span { font-size: 12px; color: var(--ink-2); }
+.field input, .field select { font: inherit; color: var(--ink); background: var(--page);
+  border: 1px solid var(--border); border-radius: 6px; padding: 4px 6px; width: 90px; }
+.field select { width: 130px; }
+.field label.chk { display: flex; align-items: center; gap: 6px; padding: 5px 0; }
+button { font: inherit; color: var(--ink); background: var(--page); border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 12px; cursor: pointer; }
+button:hover { background: var(--wash); }
+button.primary { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+button.primary:hover { opacity: 0.88; }
+button.danger { border-color: var(--err); color: var(--err); }
+button:disabled { opacity: 0.45; cursor: default; }
+.sep { width: 1px; align-self: stretch; background: var(--border); }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 12px; }
+@media (max-width: 1000px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+.charts { display: grid; gap: 12px; min-width: 0; }
+canvas { display: block; width: 100%; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--ink-2); margin-top: 6px; }
+.legend i { display: inline-block; vertical-align: middle; margin-right: 6px; width: 18px; height: 10px; border-radius: 3px; }
+.legend i.line { height: 0; border-top: 2px solid; border-radius: 0; }
+.legend i.dash { height: 0; border-top: 2px dashed; border-radius: 0; }
+.nodes { display: grid; gap: 8px; }
+.node { border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font-size: 12px; color: var(--ink-2);
+  display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; align-items: center; border-left-width: 4px; }
+.node .name { font-size: 15px; font-weight: 600; color: var(--ink); }
+.node .role { font-weight: 600; color: var(--ink); text-align: right; }
+.node .rate { grid-column: 1 / -1; font-variant-numeric: tabular-nums; }
+.node.down { opacity: 0.55; }
+.node.n1 { border-left-color: var(--n1); } .node.n2 { border-left-color: var(--n2); } .node.n3 { border-left-color: var(--n3); }
+.tag { display: inline-block; padding: 1px 6px; border-radius: 4px; background: var(--wash); margin-left: 6px; font-weight: 500; }
+.tag.off { color: var(--err); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+.tile { border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; }
+.tile .k { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.tile .v { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.tile .v small { font-size: 12px; font-weight: 400; color: var(--ink-2); }
+.tile.bad .v { color: var(--err); }
+.log { font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; max-height: 220px; overflow: auto;
+  white-space: pre-wrap; color: var(--ink-2); }
+.log .ev { color: var(--event); font-weight: 600; }
+.events { font-size: 12px; color: var(--ink-2); display: grid; gap: 2px; max-height: 180px; overflow: auto; }
+.events b { color: var(--ink); font-variant-numeric: tabular-nums; margin-right: 6px; }
+.tooltip { position: absolute; pointer-events: none; display: none; z-index: 2; background: var(--surface); color: var(--ink);
+  border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; font-size: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  white-space: pre-line; font-variant-numeric: tabular-nums; }
+.chart { position: relative; }
+.hint { font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>Replicated key-value lab</h1>
+  <span class="status" id="status">connecting</span>
+</header>
+
+<section class="card">
+  <h2>Cluster</h2>
+  <div class="row">
+    <label class="field"><span>System</span>
+      <select id="system"><option value="etcd">etcd (Raft)</option><option value="redis">Redis (async replicas)</option></select></label>
+    <button class="primary" id="btnUp">Start clean cluster</button>
+    <button id="btnDown">Stop cluster</button>
+    <span class="hint">Starting removes any cluster and its data, builds the generator image and waits until the nodes are ready.</span>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Load</h2>
+  <div class="row">
+    <label class="field"><span>Clients (N)</span><input id="threads" type="number" min="1" max="4096" value="16"></label>
+    <label class="field"><span>Duration (s)</span><input id="duration" type="number" min="2" value="60"></label>
+    <label class="field"><span>Warm-up (s)</span><input id="warmup" type="number" min="0" value="5"></label>
+    <label class="field"><span>PUT ratio</span><input id="put" type="number" min="0" max="1" step="0.05" value="0.2"></label>
+    <label class="field"><span>Reads</span><select id="read"></select></label>
+    <label class="field"><span>Routing</span><label class="chk"><input id="pinned" type="checkbox"> pinned to one node</label></label>
+    <button class="primary" id="btnLoad">Start load</button>
+    <div class="sep"></div>
+    <label class="field"><span>Pairs</span><input id="pairs" type="number" min="1" value="10000"></label>
+    <label class="field"><span>PUT on</span><select id="wnode"><option>1</option><option>2</option><option>3</option></select></label>
+    <label class="field"><span>GET on</span><select id="rnode"><option>1</option><option>2</option><option selected>3</option></select></label>
+    <button class="primary" id="btnStale">Start stale reads</button>
+    <div class="sep"></div>
+    <button class="danger" id="btnStop">Stop tool</button>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Faults</h2>
+  <div class="row">
+    <label class="field"><span>Delay per direction</span><input id="delay" value="50ms"></label>
+    <button data-fault="latency">Add delay between nodes</button>
+    <button data-fault="nolatency">Remove delay</button>
+    <div class="sep"></div>
+    <button data-fault="partition">Partition n1</button>
+    <button data-fault="heal">Heal partition</button>
+    <div class="sep"></div>
+    <label class="field"><span>Node</span><select id="fnode"><option>n1</option><option>n2</option><option>n3</option></select></label>
+    <button data-fault="kill">docker kill</button>
+    <button data-fault="start">docker start</button>
+  </div>
+</section>
+
+<div class="grid">
+  <div class="charts">
+    <section class="card chart">
+      <h2>Successful requests per second, by node that answered</h2>
+      <canvas id="cThr" height="220"></canvas>
+      <div class="legend"><span><i style="background:var(--n1)"></i>n1</span><span><i style="background:var(--n2)"></i>n2</span>
+        <span><i style="background:var(--n3)"></i>n3</span><span><i style="background:var(--err)"></i>errors (timeouts and failures)</span>
+        <span><i style="background:var(--warm)"></i>warm-up</span><span><i class="line" style="border-color:var(--event)"></i>event</span></div>
+    </section>
+    <section class="card chart">
+      <h2>Latency per second (ms, log scale)</h2>
+      <canvas id="cLat" height="200"></canvas>
+      <div class="legend"><span><i class="line" style="border-color:var(--get)"></i>GET p99</span><span><i class="dash" style="border-color:var(--get)"></i>GET p50</span>
+        <span><i class="line" style="border-color:var(--put)"></i>PUT p99</span><span><i class="dash" style="border-color:var(--put)"></i>PUT p50</span></div>
+    </section>
+    <section class="card chart">
+      <h2>Stale reads per second (E3 coordinator)</h2>
+      <canvas id="cStale" height="140"></canvas>
+      <div class="legend"><span><i style="background:var(--stale)"></i>stale</span><span><i style="background:var(--axis)"></i>fresh</span>
+        <span><i style="background:var(--err)"></i>PUT or GET errors</span></div>
+    </section>
+  </div>
+  <aside style="display:grid; gap:12px; align-content:start">
+    <section class="card">
+      <h2>Nodes</h2>
+      <div class="nodes" id="nodes"><span class="hint">no cluster</span></div>
+    </section>
+    <section class="card">
+      <h2>Last second</h2>
+      <div class="tiles" id="tiles"></div>
+    </section>
+    <section class="card">
+      <h2>Events</h2>
+      <div class="events" id="events"></div>
+    </section>
+  </aside>
+</div>
+
+<section class="card">
+  <h2>Log</h2>
+  <div class="log" id="log"></div>
+</section>
+</main>
+<div class="tooltip" id="tip"></div>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const NODES = ['n1', 'n2', 'n3'];
+
+// ---- state ----
+const state = {
+  system: '', starting: false, tool: null,
+  intervals: [],   // load intervals, in order
+  stale: [],       // stale intervals
+  events: [],      // {t, kind, label}
+  nodes: [],       // last node states
+  logLines: 0,
+};
+
+const readOptions = {
+  etcd: [['linearizable', 'linearizable (quorum)'], ['serializable', 'serializable (local)']],
+  redis: [['replicas', 'replicas'], ['all', 'all nodes'], ['primary', 'primary only']],
+};
+function fillReads() {
+  const sel = $('read'), sys = $('system').value;
+  sel.innerHTML = '';
+  for (const [v, label] of readOptions[sys]) { const o = document.createElement('option'); o.value = v; o.textContent = label; sel.appendChild(o); }
+}
+$('system').addEventListener('change', fillReads);
+fillReads();
+
+// ---- api ----
+async function post(path, body) {
+  const r = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) });
+  if (!r.ok) { const text = await r.text(); addLog('error: ' + text.trim()); }
+}
+$('btnUp').onclick = () => { $('system').disabled = true; post('/api/cluster', { system: $('system').value }); };
+$('btnDown').onclick = () => post('/api/cluster', { system: '' });
+$('btnLoad').onclick = () => post('/api/load', {
+  threads: +$('threads').value, duration: +$('duration').value, warmup: +$('warmup').value,
+  putRatio: +$('put').value, read: $('read').value, pinned: $('pinned').checked });
+$('btnStale').onclick = () => post('/api/stale', {
+  pairs: +$('pairs').value, writeNode: +$('wnode').value, readNode: +$('rnode').value,
+  read: $('system').value === 'etcd' ? $('read').value : '' });
+$('btnStop').onclick = () => post('/api/stop');
+for (const b of document.querySelectorAll('button[data-fault]')) {
+  b.onclick = () => post('/api/fault', { kind: b.dataset.fault, delay: $('delay').value, node: $('fnode').value });
+}
+
+function updateButtons() {
+  const up = !!state.system, busy = state.starting, tool = !!state.tool;
+  $('btnUp').disabled = busy || tool;
+  $('btnDown').disabled = busy || tool || !up;
+  $('system').disabled = up || busy;
+  $('btnLoad').disabled = !up || tool || busy;
+  $('btnStale').disabled = !up || tool || busy;
+  $('btnStop').disabled = !tool;
+  for (const b of document.querySelectorAll('button[data-fault]')) b.disabled = !up || busy;
+  let s = busy ? `starting <b>${$('system').value}</b> cluster` : (up ? `<b>${state.system}</b> cluster up` : 'no cluster');
+  if (tool) s += ` · running <b>${state.tool}</b>`;
+  $('status').innerHTML = s;
+}
+
+// ---- events ----
+// The server replays the whole session on each connection, so a reconnection
+// starts from an empty state.
+let es = null;
+function connect() {
+  if (es) es.close();
+  state.intervals = []; state.stale = []; state.events = []; state.nodes = []; state.tool = null;
+  $('log').textContent = ''; $('events').innerHTML = ''; state.logLines = 0;
+  es = new EventSource('/api/events');
+  es.onopen = () => { $('status').textContent = 'connected'; };
+  es.onmessage = m => { handle(JSON.parse(m.data)); };
+  es.onerror = () => { if (es.readyState === EventSource.CLOSED) { $('status').textContent = 'disconnected, retrying'; setTimeout(connect, 1000); } };
+}
+// Firefox drops an EventSource opened before the page finished loading.
+if (document.readyState === 'complete') connect(); else window.addEventListener('load', connect);
+let drawPending = false;
+function scheduleDraw() { if (!drawPending) { drawPending = true; requestAnimationFrame(() => { drawPending = false; drawAll(); }); } }
+
+function handle(ev) {
+  switch (ev.type) {
+    case 'session':
+      if (ev.starting) { state.intervals = []; state.stale = []; state.events = []; state.nodes = []; $('log').textContent = ''; $('events').innerHTML = ''; }
+      state.system = ev.system || ''; state.starting = !!ev.starting; state.tool = null;
+      if (state.system) { $('system').value = state.system; fillReads(); }
+      if (!state.system) { $('nodes').innerHTML = '<span class="hint">no cluster</span>'; }
+      break;
+    case 'tool': state.tool = ev.running ? ev.name : null; break;
+    case 'interval': state.intervals.push(ev); tiles(ev); break;
+    case 'stale': state.stale.push(ev); staleTiles(ev); break;
+    case 'nodes': state.nodes = ev.nodes; renderNodes(); break;
+    case 'event': state.events.push(ev); addEvent(ev); addLog(ev.label, true); break;
+    case 'log': addLog(ev.text); break;
+  }
+  updateButtons();
+  scheduleDraw();
+}
+
+function fmtT(t) { const s = Math.max(0, Math.round(t)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
+function addEvent(ev) {
+  const d = document.createElement('div'); d.innerHTML = `<b>${fmtT(ev.t)}</b>${ev.label}`;
+  $('events').prepend(d);
+}
+function addLog(text, isEvent) {
+  const log = $('log');
+  const atBottom = log.scrollTop + log.clientHeight >= log.scrollHeight - 4;
+  const d = document.createElement('div'); d.textContent = text; if (isEvent) d.className = 'ev';
+  log.appendChild(d);
+  if (++state.logLines > 2000) log.removeChild(log.firstChild);
+  if (atBottom) log.scrollTop = log.scrollHeight;
+}
+
+// ---- side panels ----
+function renderNodes() {
+  const last = state.intervals[state.intervals.length - 1];
+  $('nodes').innerHTML = state.nodes.map((n, i) => {
+    const per = last && last.nodes && last.nodes[i];
+    const ok = per ? per.get.ok + per.put.ok : 0, err = per ? per.get.timeouts + per.get.failed + per.put.timeouts + per.put.failed : 0;
+    const net = n.running ? (n.connected ? '' : '<span class="tag off">isolated</span>') : '';
+    return `<div class="node ${n.name} ${n.running ? '' : 'down'}">
+      <span class="name">${n.name}${net}</span><span class="role">${n.running ? n.role : 'down'}</span>
+      <span>${n.detail || ''}</span><span></span>
+      <span class="rate">${last ? `${ok} ok/s${err ? `, <span style="color:var(--err)">${err} err/s</span>` : ''}` : ''}</span>
+    </div>`;
+  }).join('');
+}
+function tile(k, v, unit, bad) { return `<div class="tile ${bad ? 'bad' : ''}"><div class="k">${k}</div><div class="v">${v}${unit ? `<small> ${unit}</small>` : ''}</div></div>`; }
+function tiles(iv) {
+  const a = iv.all, ok = a.get.ok + a.put.ok, err = a.get.timeouts + a.get.failed + a.put.timeouts + a.put.failed;
+  $('tiles').innerHTML = tile('ok', ok.toLocaleString(), 'req/s') + tile('errors', err.toLocaleString(), 'req/s', err > 0)
+    + tile('GET p99', a.get.p99_ms.toFixed(2), 'ms') + tile('PUT p99', a.put.p99_ms.toFixed(2), 'ms')
+    + tile('GET p50', a.get.p50_ms.toFixed(2), 'ms') + tile('PUT p50', a.put.p50_ms.toFixed(2), 'ms')
+    + (iv.warmup ? tile('phase', 'warm-up', '') : '');
+  renderNodes();
+}
+function staleTiles(iv) {
+  const total = state.stale.reduce((s, x) => s + x.stale, 0), pairs = state.stale.reduce((s, x) => s + x.pairs, 0);
+  $('tiles').innerHTML = tile('pairs', iv.pairs.toLocaleString(), '/s') + tile('stale', iv.stale.toLocaleString(), '/s', iv.stale > 0)
+    + tile('max lag', iv.max_lag, 'writes') + tile('errors', iv.put_errors + iv.get_errors, '/s', iv.put_errors + iv.get_errors > 0)
+    + tile('total stale', `${total.toLocaleString()}<small> / ${pairs.toLocaleString()}</small>`, '', total > 0);
+}
+
+// ---- charts ----
+const PAD = { l: 56, r: 12, t: 10, b: 24 };
+function setup(canvas) {
+  const dpr = window.devicePixelRatio || 1, w = canvas.clientWidth, h = canvas.getAttribute('height') | 0;
+  if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) { canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr); }
+  const ctx = canvas.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  return { ctx, w, h, x0: PAD.l, x1: w - PAD.r, y0: PAD.t, y1: h - PAD.b };
+}
+function timeRange() {
+  let t1 = 10;
+  for (const iv of state.intervals) t1 = Math.max(t1, iv.t);
+  for (const iv of state.stale) t1 = Math.max(t1, iv.t);
+  for (const e of state.events) t1 = Math.max(t1, e.t + 2);
+  const t0 = Math.max(0, Math.min(...state.intervals.map(i => i.t - 1), ...state.stale.map(i => i.t - 1), t1 - 10));
+  return [t0, Math.ceil(t1 / 10) * 10];
+}
+function axes(g, t0, t1, yTicks, fmt) {
+  const { ctx } = g;
+  ctx.strokeStyle = css('--grid'); ctx.fillStyle = css('--muted'); ctx.font = '11px system-ui'; ctx.lineWidth = 1;
+  for (const [y, label] of yTicks) {
+    ctx.beginPath(); ctx.moveTo(g.x0, y + 0.5); ctx.lineTo(g.x1, y + 0.5); ctx.stroke();
+    ctx.textAlign = 'right'; ctx.fillText(label, g.x0 - 6, y + 4);
+  }
+  const span = t1 - t0, step = span > 600 ? 120 : span > 240 ? 60 : span > 100 ? 30 : span > 40 ? 10 : 5;
+  ctx.textAlign = 'center';
+  for (let t = Math.ceil(t0 / step) * step; t <= t1; t += step) {
+    const x = g.x0 + (t - t0) / span * (g.x1 - g.x0);
+    ctx.strokeStyle = css('--grid'); ctx.beginPath(); ctx.moveTo(x + 0.5, g.y0); ctx.lineTo(x + 0.5, g.y1); ctx.stroke();
+    ctx.fillText(fmtT(t), x, g.y1 + 16);
+  }
+  ctx.strokeStyle = css('--axis'); ctx.beginPath(); ctx.moveTo(g.x0 + 0.5, g.y0); ctx.lineTo(g.x0 + 0.5, g.y1 + 0.5); ctx.lineTo(g.x1, g.y1 + 0.5); ctx.stroke();
+}
+function markEvents(g, t0, t1, labels) {
+  const { ctx } = g;
+  ctx.strokeStyle = css('--event'); ctx.fillStyle = css('--event'); ctx.setLineDash([3, 3]); ctx.lineWidth = 1;
+  ctx.font = '11px system-ui'; ctx.textAlign = 'left';
+  let lastX = -Infinity, row = 0;
+  for (const e of state.events) {
+    if (e.t < t0 || e.t > t1) continue;
+    const x = g.x0 + (e.t - t0) / (t1 - t0) * (g.x1 - g.x0);
+    ctx.beginPath(); ctx.moveTo(x + 0.5, g.y0); ctx.lineTo(x + 0.5, g.y1); ctx.stroke();
+    if (labels && e.kind !== 'cluster') {
+      row = x - lastX < 90 ? (row + 1) % 3 : 0; lastX = x; // stagger labels that would overlap
+      const label = e.label.length > 22 ? e.label.slice(0, 21) + '…' : e.label;
+      ctx.fillText(label, x + 3, g.y0 + 10 + row * 12);
+    }
+  }
+  ctx.setLineDash([]);
+}
+function niceMax(v) { if (v <= 0) return 10; const p = Math.pow(10, Math.floor(Math.log10(v))); const m = v / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p; }
+function errs(o) { return o.timeouts + o.failed; }
+
+function drawThroughput() {
+  const g = setup($('cThr')), [t0, t1] = timeRange(), ctx = g.ctx;
+  let max = 0;
+  for (const iv of state.intervals) max = Math.max(max, iv.all.get.ok + iv.all.put.ok + errs(iv.all.get) + errs(iv.all.put));
+  max = niceMax(max);
+  const sx = (g.x1 - g.x0) / (t1 - t0), sy = (g.y1 - g.y0) / max;
+  // warm-up shading
+  ctx.fillStyle = css('--warm');
+  for (const iv of state.intervals) if (iv.warmup) ctx.fillRect(g.x0 + (iv.t - 1 - t0) * sx, g.y0, sx, g.y1 - g.y0);
+  axes(g, t0, t1, [0, 0.25, 0.5, 0.75, 1].map(f => [g.y1 - f * max * sy, (f * max).toLocaleString()]));
+  const colors = NODES.map(n => css('--' + n));
+  for (const iv of state.intervals) {
+    const x = g.x0 + (iv.t - 1 - t0) * sx, w = Math.max(1, sx - 0.5);
+    if (x + w < g.x0 || x > g.x1) continue;
+    let y = g.y1;
+    (iv.nodes || []).forEach((n, i) => {
+      const h = (n.get.ok + n.put.ok) * sy; if (h <= 0) return;
+      ctx.fillStyle = colors[i]; ctx.fillRect(x, y - h, w, h); y -= h;
+    });
+    const ne = errs(iv.all.get) + errs(iv.all.put);
+    if (ne > 0) { const e = Math.max(2, ne * sy); ctx.fillStyle = css('--err'); ctx.fillRect(x, y - e, w, e); }
+  }
+  markEvents(g, t0, t1, true);
+  g.t0 = t0; g.t1 = t1; charts.thr = g;
+}
+function drawLatency() {
+  const g = setup($('cLat')), [t0, t1] = timeRange(), ctx = g.ctx;
+  let lo = Infinity, hi = 0;
+  for (const iv of state.intervals) for (const o of [iv.all.get, iv.all.put]) {
+    if (o.p50_ms > 0) lo = Math.min(lo, o.p50_ms); if (o.p99_ms > 0) hi = Math.max(hi, o.p99_ms);
+  }
+  if (!isFinite(lo)) { lo = 0.1; hi = 100; }
+  const lmin = Math.floor(Math.log10(lo)), lmax = Math.ceil(Math.log10(Math.max(hi, lo * 10)));
+  const sx = (g.x1 - g.x0) / (t1 - t0), ly = v => g.y1 - (Math.log10(v) - lmin) / (lmax - lmin) * (g.y1 - g.y0);
+  const ticks = []; for (let e = lmin; e <= lmax; e++) ticks.push([ly(Math.pow(10, e)), (Math.pow(10, e)).toLocaleString()]);
+  ctx.fillStyle = css('--warm');
+  for (const iv of state.intervals) if (iv.warmup) ctx.fillRect(g.x0 + (iv.t - 1 - t0) * sx, g.y0, sx, g.y1 - g.y0);
+  axes(g, t0, t1, ticks);
+  const series = [['get', 'p99_ms', false], ['get', 'p50_ms', true], ['put', 'p99_ms', false], ['put', 'p50_ms', true]];
+  for (const [op, key, dashed] of series) {
+    ctx.strokeStyle = css('--' + op); ctx.lineWidth = dashed ? 1.2 : 2; ctx.setLineDash(dashed ? [4, 3] : []);
+    ctx.beginPath(); let pen = false, prevT = -Infinity;
+    for (const iv of state.intervals) {
+      const v = iv.all[op][key];
+      if (!(v > 0) || iv.t - prevT > 1.5) pen = false; // gap between runs, or no successful request
+      prevT = iv.t;
+      if (!(v > 0)) continue;
+      const x = g.x0 + (iv.t - 0.5 - t0) * sx, y = ly(v);
+      if (pen) ctx.lineTo(x, y); else ctx.moveTo(x, y); pen = true;
+    }
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  markEvents(g, t0, t1);
+  g.t0 = t0; g.t1 = t1; charts.lat = g;
+}
+function drawStale() {
+  const g = setup($('cStale')), [t0, t1] = timeRange(), ctx = g.ctx;
+  let max = 0;
+  for (const iv of state.stale) max = Math.max(max, iv.pairs + iv.put_errors + iv.get_errors);
+  max = niceMax(max);
+  const sx = (g.x1 - g.x0) / (t1 - t0), sy = (g.y1 - g.y0) / max;
+  axes(g, t0, t1, [0, 0.5, 1].map(f => [g.y1 - f * max * sy, (f * max).toLocaleString()]));
+  for (const iv of state.stale) {
+    const x = g.x0 + (iv.t - 1 - t0) * sx, w = Math.max(1, sx - 0.5);
+    let y = g.y1;
+    const fresh = (iv.pairs - iv.stale) * sy; ctx.fillStyle = css('--axis'); ctx.fillRect(x, y - fresh, w, fresh); y -= fresh;
+    const st = iv.stale * sy; ctx.fillStyle = css('--stale'); ctx.fillRect(x, y - st, w, st); y -= st;
+    const e = (iv.put_errors + iv.get_errors) * sy; if (e > 0) { ctx.fillStyle = css('--err'); ctx.fillRect(x, y - e, w, e); }
+  }
+  markEvents(g, t0, t1);
+  g.t0 = t0; g.t1 = t1; charts.stale = g;
+}
+const charts = {};
+function drawAll() { drawThroughput(); drawLatency(); drawStale(); }
+window.addEventListener('resize', scheduleDraw);
+new MutationObserver(scheduleDraw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', scheduleDraw);
+
+// ---- tooltip ----
+function hover(canvas, which, text) {
+  canvas.addEventListener('mousemove', e => {
+    const g = charts[which]; if (!g) return;
+    const rect = canvas.getBoundingClientRect(), x = e.clientX - rect.left;
+    const t = g.t0 + (x - g.x0) / (g.x1 - g.x0) * (g.t1 - g.t0);
+    const s = text(t);
+    const tip = $('tip');
+    if (!s) { tip.style.display = 'none'; return; }
+    tip.textContent = s; tip.style.display = 'block';
+    tip.style.left = Math.min(e.pageX + 12, document.body.clientWidth - 260) + 'px'; tip.style.top = (e.pageY + 12) + 'px';
+  });
+  canvas.addEventListener('mouseleave', () => { $('tip').style.display = 'none'; });
+}
+function near(list, t) { return list.find(iv => t >= iv.t - 1 && t < iv.t); }
+function evNear(t) { const e = state.events.filter(e => Math.abs(e.t - t) < 0.8); return e.length ? '\n' + e.map(e => '▸ ' + e.label).join('\n') : ''; }
+hover($('cThr'), 'thr', t => {
+  const iv = near(state.intervals, t); if (!iv) return evNear(t).trim();
+  const per = (iv.nodes || []).map((n, i) => `${NODES[i]}: ${n.get.ok + n.put.ok} ok, ${errs(n.get) + errs(n.put)} err`).join('\n');
+  return `${fmtT(iv.t)}${iv.warmup ? ' (warm-up)' : ''}\nGET ${iv.all.get.ok} ok, ${errs(iv.all.get)} err · PUT ${iv.all.put.ok} ok, ${errs(iv.all.put)} err\n${per}${evNear(t)}`;
+});
+hover($('cLat'), 'lat', t => {
+  const iv = near(state.intervals, t); if (!iv) return evNear(t).trim();
+  return `${fmtT(iv.t)}\nGET p50 ${iv.all.get.p50_ms.toFixed(2)} ms, p99 ${iv.all.get.p99_ms.toFixed(2)} ms\nPUT p50 ${iv.all.put.p50_ms.toFixed(2)} ms, p99 ${iv.all.put.p99_ms.toFixed(2)} ms${evNear(t)}`;
+});
+hover($('cStale'), 'stale', t => {
+  const iv = near(state.stale, t); if (!iv) return evNear(t).trim();
+  return `${fmtT(iv.t)}\n${iv.pairs} pairs, ${iv.stale} stale, max lag ${iv.max_lag}\n${iv.put_errors} PUT errors, ${iv.get_errors} GET errors${evNear(t)}`;
+});
+updateButtons();
+drawAll();
+</script>
+</body>
+</html>

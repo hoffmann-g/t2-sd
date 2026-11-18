@@ -422,3 +422,29 @@ func TestRunInterrupted(t *testing.T) {
 		t.Errorf("partial summary: duration=%vs ok=%d", s.DurationS, s.All.OK)
 	}
 }
+
+func TestPreloadSkipsFailedNode(t *testing.T) {
+	store := newFakeStore()
+	store.down[1] = true
+	cfg := testConfig()
+	if err := Preload(context.Background(), store, cfg); err != nil {
+		t.Fatal(err)
+	}
+	if len(store.data) != cfg.Keys {
+		t.Fatalf("%d keys written, want %d", len(store.data), cfg.Keys)
+	}
+	failed := 0
+	for _, c := range store.calls {
+		if c.node == 1 {
+			failed++
+		}
+	}
+	// One failure per worker at most, after which the node is left out.
+	if failed > 32 {
+		t.Errorf("%d requests sent to the failed node", failed)
+	}
+	store.down[0], store.down[2] = true, true
+	if err := Preload(context.Background(), store, cfg); err == nil {
+		t.Error("preload succeeded with every node down")
+	}
+}

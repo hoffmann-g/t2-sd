@@ -7,6 +7,7 @@ import (
 	"math/rand/v2"
 	"runtime"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"t2sd/internal/kv"
@@ -139,7 +140,10 @@ func newValue(size int, rng *rand.Rand) []byte {
 }
 
 // Preload writes every key once, so that reads find a value from the first
-// request on. It uses the same value size as the run.
+// request on. It uses the same value size as the run. Writes rotate over the
+// write nodes; a node that fails is left out for the rest of the preload,
+// and the key is written through the next one. Preload fails only when a
+// key cannot be written through any node.
 func Preload(ctx context.Context, store kv.Store, cfg Config) error {
 	if err := cfg.validate(); err != nil {
 		return err
@@ -150,6 +154,7 @@ func Preload(ctx context.Context, store kv.Store, cfg Config) error {
 		wg    sync.WaitGroup
 		mu    sync.Mutex
 		first error
+		bad   = make([]atomic.Bool, store.Nodes())
 	)
 	next := make(chan int)
 	for w := 0; w < workers; w++ {
@@ -159,9 +164,20 @@ func Preload(ctx context.Context, store kv.Store, cfg Config) error {
 			value := newValue(cfg.ValueSize, rand.New(rand.NewPCG(cfg.Seed, preloadClient+uint64(w))))
 			for k := range next {
 				stamp(value, preloadClient, uint64(k))
-				rctx, cancel := context.WithTimeout(ctx, cfg.Timeout)
-				_, err := store.Put(rctx, write[k%len(write)], KeyName(k), value)
-				cancel()
+				var err error
+				for attempt := 0; attempt < len(write); attempt++ {
+					node := write[(k+attempt)%len(write)]
+					if bad[node].Load() && attempt < len(write)-1 {
+						continue
+					}
+					rctx, cancel := context.WithTimeout(ctx, cfg.Timeout)
+					_, err = store.Put(rctx, node, KeyName(k), value)
+					cancel()
+					if err == nil {
+						break
+					}
+					bad[node].Store(true)
+				}
 				if err != nil {
 					mu.Lock()
 					if first == nil {
